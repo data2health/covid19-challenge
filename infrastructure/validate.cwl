@@ -6,6 +6,10 @@ cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: python
 
+hints:
+  DockerRequirement:
+    dockerPull: sagebionetworks/synapsepythonclient:v2.0.0
+
 inputs:
 
   - id: entity_type

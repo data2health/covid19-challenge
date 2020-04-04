@@ -4,7 +4,11 @@
 #
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: python
+baseCommand: python3
+
+hints:
+  DockerRequirement:
+    dockerPull: sagebionetworks/synapsepythonclient:v2.0.0
 
 inputs:
   - id: status
@@ -59,7 +63,7 @@ requirements:
           args = parser.parse_args()
           syn = synapseclient.Synapse(configPath=args.synapse_config)
           syn.login()
-          if args.status == "VALIDATED":
+          if args.status.startswith("VALID"):
             submission_dict = {"submissionid": int(args.submissionid)}
             with open(args.results, 'w') as json_file:
               json_file.write(json.dumps(submission_dict))

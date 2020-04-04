@@ -135,6 +135,36 @@ steps:
         source: "#annotate_submission_main_userid/finished"
     out: [finished]
 
+  # just used for local testing
+  # run_docker_infer:
+  #   run: run_docker.cwl
+  #   in:
+  #     - id: docker_repository
+  #       source: "#get_docker_submission/docker_repository"
+  #     - id: docker_digest
+  #       source: "#get_docker_submission/docker_digest"
+  #     - id: submissionid
+  #       source: "#submissionId"
+  #     - id: docker_registry
+  #       source: "#get_docker_config/docker_registry"
+  #     - id: docker_authentication
+  #       source: "#get_docker_config/docker_authentication"
+  #     - id: status
+  #       source: "#validate_docker/status"
+  #     - id: parentid
+  #       source: "#submitterUploadSynId"
+  #     - id: synapse_config
+  #       source: "#synapseConfig"
+  #     - id: input_dir
+  #       # Replace this with correct datapath
+  #       valueFrom: "/Users/ThomasY/sage_projects/DREAM/covid19-challenge/infrastructure"
+  #     - id: docker_script
+  #       default:
+  #         class: File
+  #         location: "run_docker.py"
+  #   out:
+  #     - id: predictions
+
   run_docker_train:
     run: run_training_docker.cwl
     in:
