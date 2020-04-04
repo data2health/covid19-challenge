@@ -32,7 +32,7 @@ outputs: []
 steps:
 
   set_permissions:
-    run: set_permissions.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/set_permissions.cwl
     in:
       - id: entityid
         source: "#submitterUploadSynId"
