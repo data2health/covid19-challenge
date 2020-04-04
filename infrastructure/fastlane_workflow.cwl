@@ -55,28 +55,20 @@ steps:
     out:
       - id: filepath
 
-  notify_participants:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/notification_email.cwl
-    in:
-      - id: submissionid
-        source: "#submissionId"
-      - id: synapse_config
-        source: "#synapseConfig"
-      - id: parentid
-        source: "#submitterUploadSynId"
-    out: []
-
   get_docker_submission:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/get_submission_docker.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/get_submission.cwl
     in:
       - id: submissionid
         source: "#submissionId"
       - id: synapse_config
         source: "#synapseConfig"
     out:
+      - id: filepath
       - id: docker_repository
       - id: docker_digest
-      - id: entityid
+      - id: entity_id
+      - id: entity_type
+      - id: results
       
   validate_docker:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/validate_docker.cwl
@@ -115,6 +107,8 @@ steps:
     out: 
       - id: docker_registry
       - id: docker_authentication
+
+  # comment out below to test locally
 
   run_docker_train:
     run: run_synthetic_training_docker.cwl
@@ -187,7 +181,7 @@ steps:
       - id: parentid
         source: "#adminUploadSynId"
       - id: used_entity
-        source: "#get_docker_submission/entityid"
+        source: "#get_docker_submission/entity_id"
       - id: executed_entity
         source: "#workflowSynapseId"
       - id: synapse_config
