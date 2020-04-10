@@ -118,6 +118,21 @@ steps:
         source: "#synapseConfig"
     out: [finished]
 
+  validate_json_email:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/validate_email.cwl
+    in:
+      - id: submissionid
+        source: "#submissionId"
+      - id: synapse_config
+        source: "#synapseConfig"
+      - id: status
+        source: "#validate_json/status"
+      - id: invalid_reasons
+        source: "#validate_json/invalid_reasons"
+      - id: errors_only
+        default: true
+    out: [finished]
+
   check_status:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/check_status.cwl
     in:
@@ -125,6 +140,8 @@ steps:
         source: "#validate_json/status"
       - id: previous_annotation_finished
         source: "#annotate_docker_validation_with_output/finished"
+      - id: previous_email_finished
+        source: "#validate_json_email/finished"
     out: [finished]
 
   get_docker_config:
@@ -289,7 +306,9 @@ steps:
   #       source: "#validation/status"
   #     - id: invalid_reasons
   #       source: "#validation/invalid_reasons"
-  #   out: []
+  #     - id: errors_only
+  #       default: true
+  #   out: [finished]
 
   # annotate_validation_with_output:
   #   run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
