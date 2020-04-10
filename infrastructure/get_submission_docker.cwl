@@ -53,8 +53,10 @@ requirements:
             raise Exception('Expected DockerRepository type but found '+sub.entity.concreteType)
           result = {'docker_repository': sub.get("dockerRepositoryName",""),
                     'docker_digest': sub.get("dockerDigest",""),
-                    'entityid': sub.entity.id}
-          status = syn.getSubmissionStatus(args.submissionid)
+                    'entityid': sub.entity.id,
+                    'main_submission_id': int(sub.name)}
+          status = syn.getSubmissionStatus(sub.name)
+          orig_sub = syn.getSubmission(sub.name)
           get_values = filter(lambda x: x.get('key') in ['admin_folder', 'orgSagebionetworksSynapseWorkflowOrchestratorSubmissionFolder'],
                               status.annotations['stringAnnos'])
           add_values = {value['key']: value['value'] for value in get_values}
@@ -68,8 +70,8 @@ requirements:
           with open(args.results, 'w') as o:
             o.write(json.dumps(result))
 
-          submitterid = sub['userId'] if sub.get("teamId") is None else sub['teamId'] 
-          userids = {'main_userid': sub.userId, 'main_submitterId': submitterid}
+          submitterid = orig_sub['userId'] if orig_sub.get("teamId") is None else orig_sub['teamId']
+          userids = {'main_userid': orig_sub.userId, 'main_submitterId': submitterid}
           with open(args.output, 'w') as o:
             o.write(json.dumps(userids))
 
@@ -92,6 +94,12 @@ outputs:
       glob: results.json
       loadContents: true
       outputEval: $(JSON.parse(self[0].contents)['entityid'])
+  - id: main_submission_id
+    type: int
+    outputBinding:
+      glob: results.json
+      loadContents: true
+      outputEval: $(JSON.parse(self[0].contents)['main_submission_id'])
   - id: admin_synid
     type: string
     outputBinding:
