@@ -119,13 +119,13 @@ requirements:
 
                 resp = requests.get(docker_request_url, headers={'Authorization': 'Bearer %s' % token})
                 if resp.status_code != 200:
-                  invalid_reasons.append("Docker image + sha digest must exist.  You submitted %s@%s" % (args.docker_repository,args.docker_digest))
-
-                #Must check docker image size
-                #Synapse docker registry
-                docker_size = sum([layer['size'] for layer in resp.json()['layers']])
-                if docker_size/1000000000.0 >= 1000:
-                  invalid_reasons.append("Docker container must be less than a teribyte")
+                  invalid_reasons.append("Your docker image + sha digest must exist and be shared with `coviddreamservice` Synapse account.  You submitted {}.".format(docker))
+                else:
+                  #Must check docker image size
+                  #Synapse docker registry
+                  docker_size = sum([layer['size'] for layer in resp.json()['layers']])
+                  if docker_size/1000000000.0 >= 1000:
+                    invalid_reasons.append("Docker container must be less than a teribyte")
               
           status = "INVALID" if invalid_reasons else "VALID"
           result = {'docker_image_errors':"\n".join(invalid_reasons),'docker_image_status':status,
