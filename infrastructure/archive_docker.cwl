@@ -23,6 +23,8 @@ inputs:
     type: string
   - id: docker_authentication
     type: string
+  - id: previous_step
+    type: boolean?
 
 arguments:
   - valueFrom: archive_docker.py

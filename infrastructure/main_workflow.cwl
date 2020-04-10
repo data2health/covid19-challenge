@@ -118,6 +118,15 @@ steps:
         source: "#synapseConfig"
     out: [finished]
 
+  check_status:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/check_status.cwl
+    in:
+      - id: status
+        source: "#validate_json/status"
+      - id: previous_annotation_finished
+        source: "#annotate_docker_validation_with_output/finished"
+    out: [finished]
+
   get_docker_config:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/get_docker_config.cwl
     in:
@@ -130,6 +139,8 @@ steps:
   archive_docker:
     run: archive_docker.cwl
     in:
+      - id: previous_step
+        source: "#check_status/finished"
       - id: docker_repository
         source: "#validate_json/docker_repository"
       - id: docker_digest
@@ -294,6 +305,15 @@ steps:
   #     - id: synapse_config
   #       source: "#synapseConfig"
   #   out: [finished]
+
+  # check_status:
+  #   run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/check_status.cwl
+  #   in:
+  #     - id: status
+  #       source: "#validation/status"
+  #     - id: previous_annotation_finished
+  #       source: "#annotate_validation_with_output/finished"
+  #   out: [finished]
   # # end comment section
 
   submit_to_challenge:
@@ -333,12 +353,3 @@ steps:
         source: "#synapseConfig"
     out: [finished]
 
-  check_status:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/check_status.cwl
-    in:
-      - id: status
-        source: "#validate_json/status"
-        # source: "#validation/status"
-      - id: previous_annotation_finished
-        source: "#annotate_status/finished"
-    out: [finished]
