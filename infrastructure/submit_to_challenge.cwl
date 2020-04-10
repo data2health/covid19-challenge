@@ -64,11 +64,11 @@ requirements:
           syn = synapseclient.Synapse(configPath=args.synapse_config)
           syn.login()
           if args.status.startswith("VALID"):
-            submission_status = {"prediction_file_status": "EVALUATION_IN_PROGRESS"}
+            submission_status = {"submission_status": "EVALUATION_IN_PROGRESS"}
             syn.submit(evaluation=args.evaluationid,
                        entity=args.entityid, name=args.submissionid)
           else:
-            submission_status = {"prediction_file_status": "INVALID"}
+            submission_status = {"submission_status": "INVALID"}
           with open(args.results, 'w') as status_file:
             status_file.write(json.dumps(submission_status))
 

@@ -119,7 +119,7 @@ requirements:
 
                 resp = requests.get(docker_request_url, headers={'Authorization': 'Bearer %s' % token})
                 if resp.status_code != 200:
-                  invalid_reasons.append("Your docker image + sha digest must exist and be shared with `coviddreamservice` Synapse account.  You submitted {}.".format(docker))
+                  invalid_reasons.append("Your docker image + sha digest must exist and be shared with `COVID-19 DREAM Challenge Admin` Synapse Team.  You submitted {}.".format(docker))
                 else:
                   #Must check docker image size
                   #Synapse docker registry
@@ -128,7 +128,8 @@ requirements:
                     invalid_reasons.append("Docker container must be less than a teribyte")
               
           status = "INVALID" if invalid_reasons else "VALID"
-          result = {'docker_image_errors':"\n".join(invalid_reasons),'docker_image_status':status,
+          result = {'submission_errors': "\n".join(invalid_reasons),
+                    'submission_status': status,
                     'docker_repository': docker_list[0],
                     'docker_digest': docker_list[1]}
           with open(args.results, 'w') as o:
@@ -146,14 +147,14 @@ outputs:
     outputBinding:
       glob: results.json
       loadContents: true
-      outputEval: $(JSON.parse(self[0].contents)['docker_image_status'])
+      outputEval: $(JSON.parse(self[0].contents)['submission_status'])
 
   - id: invalid_reasons
     type: string
     outputBinding:
       glob: results.json
       loadContents: true
-      outputEval: $(JSON.parse(self[0].contents)['docker_image_errors'])
+      outputEval: $(JSON.parse(self[0].contents)['submission_errors'])
 
   - id: docker_repository
     type: string
