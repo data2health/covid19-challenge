@@ -51,6 +51,7 @@ requirements:
 
           if sub.entity.concreteType!='org.sagebionetworks.repo.model.docker.DockerRepository':
             raise Exception('Expected DockerRepository type but found '+sub.entity.concreteType)
+          # TODO: Get evaluation queue id to track dataset
           result = {'docker_repository': sub.get("dockerRepositoryName",""),
                     'docker_digest': sub.get("dockerDigest",""),
                     'entityid': sub.entity.id,

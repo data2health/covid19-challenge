@@ -8,6 +8,7 @@ baseCommand: score.R
 
 hints:
   DockerRequirement:
+  # TODO: scoring harness will have to take dataset name
     dockerPull: docker.synapse.org/syn18405992/scoring_harness
 
 inputs:

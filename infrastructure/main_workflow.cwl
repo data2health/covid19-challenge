@@ -318,6 +318,7 @@ steps:
         source: "#synapseConfig"
       # - id: parentid
       #   source: "#submitterUploadSynId"
+      # Update this evaluationid when there is a new dataset
       - id: evaluationid
         valueFrom: "9614451"
       - id: previous_annotation_finished
