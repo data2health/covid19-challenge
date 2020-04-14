@@ -20,17 +20,13 @@ inputs:
   - id: parentid
     type: string
   - id: status
-    type: string
+    type: boolean
   - id: synapse_config
     type: File
   - id: input_dir
     type: string
   - id: stage
     type: string
-  - id: model
-    type: File
-  - id: scratch
-    type: File
   - id: docker_script
     type: File
 
@@ -52,8 +48,6 @@ arguments:
     prefix: -i
   - valueFrom: $(inputs.stage)
     prefix: --stage
-  - valueFrom: $(inputs.model.path)
-    prefix: -m
   - valueFrom: $(inputs.scratch.path)
     prefix: -f
 

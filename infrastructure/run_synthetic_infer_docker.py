@@ -12,9 +12,6 @@ import synapseclient
 
 
 def main(args):
-    if args.status == "INVALID":
-        raise Exception("Docker image is invalid")
-
     syn = synapseclient.Synapse(configPath=args.synapse_config)
     syn.login()
 
@@ -25,31 +22,15 @@ def main(args):
     #These are the volumes that you want to mount onto your docker container
     output_dir = os.path.join(os.getcwd(), "output")
     input_dir = args.input_dir
-    model_files = args.model_files
-    scratch_files = args.scratch_files
-
-    scratch_dir = os.path.join(os.getcwd(), "scratch")
-    os.mkdir(scratch_dir)
-
-    untar_command = ['tar', '-C', scratch_dir, '-xvf', scratch_files]
-    subprocess.check_call(untar_command)
-
-    model_dir = os.path.join(os.getcwd(), "model")
-    os.mkdir(model_dir)
-
-    untar_command = ['tar', '-C', model_dir, '-xvf', model_files]
-    subprocess.check_call(untar_command)
 
     # These are the locations on the docker that you want your mounted volumes
     # to be + permissions in docker (ro, rw)
     # It has to be in this format '/output:rw'
-    mounted_volumes = {scratch_dir:'/scratch:rw',
-                       input_dir:'/infer:ro',
-                       model_dir:'/model:rw',
+    mounted_volumes = {input_dir:'/infer:ro',
                        output_dir:'/output:rw'}
 
     #All mounted volumes here in a list
-    all_volumes = [scratch_dir, input_dir, model_dir, output_dir]
+    all_volumes = [input_dir, output_dir]
     #Mount volumes
     volumes = {}
     for vol in all_volumes:
@@ -147,23 +128,6 @@ def main(args):
                         "please check inference docker")
 
 
-def quitting(signo, _frame, submissionid=None, docker_image=None):
-    """When quit signal, stop docker container and delete image"""
-    print("Interrupted by %d, shutting down" % signo)
-    client = docker.from_env()
-    try:
-        cont = client.containers.get(submissionid)
-        cont.stop()
-        cont.remove()
-    except Exception:
-        pass
-    try:
-        client.images.remove(docker_image, force=True)
-    except Exception:
-        pass
-    sys.exit(0)
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-s", "--submissionid", required=True,
@@ -184,12 +148,4 @@ if __name__ == '__main__':
     parser.add_argument("-f", "--scratch_files", required=True,
                         help="scratch files")
     args = parser.parse_args()
-    client = docker.from_env()
-    docker_image = args.docker_repository + "@" + args.docker_digest
-
-    quit_sub = partial(quitting, submissionid=args.submissionid,
-                       docker_image=docker_image)
-    for sig in ('TERM', 'HUP', 'INT'):
-        signal.signal(getattr(signal, 'SIG'+sig), quit_sub)
-
     main(args)
