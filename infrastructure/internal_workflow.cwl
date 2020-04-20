@@ -143,7 +143,7 @@ steps:
       - id: status
         source: "#validate_docker/status"
       - id: parentid
-        source: "#submitterUploadSynId"
+        source: "#get_docker_submission/submitter_synid"
       - id: synapse_config
         source: "#synapseConfig"
       - id: input_dir
@@ -173,7 +173,7 @@ steps:
       - id: status
         source: "#validate_docker/status"
       - id: parentid
-        source: "#submitterUploadSynId"
+        source: "#get_docker_submission/submitter_synid"
       - id: synapse_config
         source: "#synapseConfig"
       - id: model
