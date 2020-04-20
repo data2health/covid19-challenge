@@ -4,7 +4,6 @@ import argparse
 import json
 import os
 import subprocess
-import sys
 import time
 
 import docker
@@ -187,25 +186,6 @@ def main(syn, args):
         open(scratch_fill, 'w').close()
 
     tar(scratch_dir, 'scratch_files.tar.gz')
-
-
-def quitting(signo, _frame, submissionid=None, docker_image=None,
-             parentid=None, syn=None):
-    """When quit signal, stop docker container and delete image"""
-    print("Interrupted by %d, shutting down" % signo)
-    # Make sure to store logs and remove containers
-    try:
-        cont = client.containers.get(submissionid)
-        log_text = cont.logs()
-        log_filename = submissionid + "_training_log.txt"
-        create_log_file(log_filename, log_text=log_text)
-        store_log_file(syn, log_filename, args.parentid, test=True)
-        cont.stop()
-        cont.remove()
-    except Exception:
-        pass
-    remove_docker_image(docker_image)
-    sys.exit(0)
 
 
 if __name__ == '__main__':
