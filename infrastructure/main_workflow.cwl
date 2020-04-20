@@ -183,9 +183,9 @@ steps:
     run: run_synthetic_training_docker.cwl
     in:
       - id: docker_repository
-        source: "#get_docker_submission/docker_repository"
+        source: "#validate_json/docker_repository"
       - id: docker_digest
-        source: "#get_docker_submission/docker_digest"
+        source: "#validate_json/docker_digest"
       - id: submissionid
         source: "#submissionId"
       - id: docker_registry
@@ -213,9 +213,9 @@ steps:
     run: run_synthetic_infer_docker.cwl
     in:
       - id: docker_repository
-        source: "#get_docker_submission/docker_repository"
+        source: "#validate_json/docker_repository"
       - id: docker_digest
-        source: "#get_docker_submission/docker_digest"
+        source: "#validate_json/docker_digest"
       - id: submissionid
         source: "#submissionId"
       - id: docker_registry
