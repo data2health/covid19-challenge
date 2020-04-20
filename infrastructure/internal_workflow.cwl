@@ -127,6 +127,36 @@ steps:
   #   out:
   #     - id: predictions
 
+  run_docker_train:
+    run: run_training_docker.cwl
+    in:
+      - id: docker_repository
+        source: "#get_docker_submission/docker_repository"
+      - id: docker_digest
+        source: "#get_docker_submission/docker_digest"
+      - id: submissionid
+        source: "#submissionId"
+      - id: docker_registry
+        source: "#get_docker_config/docker_registry"
+      - id: docker_authentication
+        source: "#get_docker_config/docker_authentication"
+      - id: status
+        source: "#validate_docker/status"
+      - id: parentid
+        source: "#submitterUploadSynId"
+      - id: synapse_config
+        source: "#synapseConfig"
+      - id: input_dir
+        valueFrom: "uw_omop_validation_training"
+      - id: docker_script
+        default:
+          class: File
+          location: "run_training_docker.py"
+    out:
+      - id: model
+      - id: scratch
+      - id: status
+
   run_docker_infer:
     run: run_infer_docker.cwl
     in:
@@ -140,15 +170,20 @@ steps:
         source: "#get_docker_config/docker_registry"
       - id: docker_authentication
         source: "#get_docker_config/docker_authentication"
+      - id: status
+        source: "#validate_docker/status"
       - id: parentid
-        source: "#get_docker_submission/submitter_synid"
+        source: "#submitterUploadSynId"
       - id: synapse_config
         source: "#synapseConfig"
-      # Make sure annotation submission gets run first
-      - id: status
-        source: "#annotate_submission_main_userid/finished"
+      - id: model
+        source: "#run_docker_train/model"
+      - id: scratch
+        source: "#run_docker_train/scratch"
       - id: input_dir
         valueFrom: "uw_omop_evaluation"
+      - id: stage
+        valueFrom: "evaluation"
       - id: docker_script
         default:
           class: File
