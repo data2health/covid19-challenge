@@ -1,11 +1,8 @@
 """Run training docker models"""
 from __future__ import print_function
 import argparse
-from functools import partial
-import getpass
 import json
 import os
-import signal
 import subprocess
 import sys
 import time
@@ -225,18 +222,7 @@ if __name__ == '__main__':
                         help="credentials file")
     parser.add_argument("--parentid", required=True,
                         help="Parent Id of submitter directory")
-    parser.add_argument("--status", required=True, help="Docker image status")
     args = parser.parse_args()
-    client = docker.from_env()
     syn = synapseclient.Synapse(configPath=args.synapse_config)
     syn.login()
-
-    docker_image = args.docker_repository + "@" + args.docker_digest
-
-    quit_sub = partial(quitting, submissionid=args.submissionid,
-                       docker_image=docker_image, parentid=args.parentid,
-                       syn=syn)
-    for sig in ('TERM', 'HUP', 'INT'):
-        signal.signal(getattr(signal, 'SIG'+sig), quit_sub)
-
     main(syn, args)

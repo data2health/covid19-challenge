@@ -141,7 +141,7 @@ steps:
       - id: docker_authentication
         source: "#get_docker_config/docker_authentication"
       - id: status
-        source: "#validate_docker/status"
+        source: "#annotate_submission_main_userid/finished"
       - id: parentid
         source: "#get_docker_submission/submitter_synid"
       - id: synapse_config
