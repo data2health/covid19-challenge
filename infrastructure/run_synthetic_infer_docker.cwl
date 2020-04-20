@@ -40,8 +40,6 @@ arguments:
     prefix: -p
   - valueFrom: $(inputs.docker_digest)
     prefix: -d
-  - valueFrom: $(inputs.status)
-    prefix: --status
   - valueFrom: $(inputs.parentid)
     prefix: --parentid
   - valueFrom: $(inputs.synapse_config.path)
