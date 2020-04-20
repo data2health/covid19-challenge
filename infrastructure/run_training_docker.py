@@ -164,7 +164,6 @@ def main(syn, args):
         # Remove container and image after being done
         container.remove()
 
-
     statinfo = os.stat(log_filename)
     if statinfo.st_size == 0:
         create_log_file(log_filename, log_text=errors)
@@ -175,8 +174,15 @@ def main(syn, args):
     remove_docker_image(docker_image)
 
     list_model = os.listdir(model_dir)
-    if not list_model:
-        raise Exception("No model generated, please check training docker")
+    # If no Docker API error, this means participant probably wanted to
+    # generate training files
+    if not list_model and errors is None:
+        # raise Exception("No model generated, please check training docker")
+        model_fill = os.path.join(model_dir, "model_fill.txt")
+        open(model_fill, 'w').close()
+        log_text = "No training files generated"
+        create_log_file(log_filename, log_text=log_text)
+        store_log_file(syn, log_filename, args.parentid)
 
     tar(model_dir, 'model_files.tar.gz')
 
