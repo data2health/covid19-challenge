@@ -20,7 +20,7 @@ inputs:
   - id: parentid
     type: string
   - id: status
-    type: string
+    type: boolean
   - id: synapse_config
     type: File
   - id: model

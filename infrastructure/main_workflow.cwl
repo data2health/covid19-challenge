@@ -193,7 +193,7 @@ steps:
       - id: docker_authentication
         source: "#get_docker_config/docker_authentication"
       - id: status
-        source: "#validate_docker/status"
+        source: "#archive_docker/archived_docker"
       - id: parentid
         source: "#submitterUploadSynId"
       - id: synapse_config
