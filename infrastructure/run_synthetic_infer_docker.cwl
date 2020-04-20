@@ -20,8 +20,12 @@ inputs:
   - id: parentid
     type: string
   - id: status
-    type: File
+    type: string
   - id: synapse_config
+    type: File
+  - id: model
+    type: File
+  - id: scratch
     type: File
   - id: input_dir
     type: string
@@ -36,12 +40,18 @@ arguments:
     prefix: -p
   - valueFrom: $(inputs.docker_digest)
     prefix: -d
+  - valueFrom: $(inputs.status)
+    prefix: --status
   - valueFrom: $(inputs.parentid)
     prefix: --parentid
   - valueFrom: $(inputs.synapse_config.path)
     prefix: -c
   - valueFrom: $(inputs.input_dir)
     prefix: -i
+  - valueFrom: $(inputs.model.path)
+    prefix: -m
+  - valueFrom: $(inputs.scratch.path)
+    prefix: -f
 
 requirements:
   - class: InitialWorkDirRequirement

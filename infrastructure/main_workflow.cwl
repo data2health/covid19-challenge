@@ -179,27 +179,59 @@ steps:
       - id: archived_docker
 
   # Comment out docker sections to local test
-  run_docker_infer:
-    run: run_synthetic_infer_docker.cwl
+  run_docker_train:
+    run: run_synthetic_training_docker.cwl
     in:
       - id: docker_repository
-        source: "#validate_json/docker_repository"
+        source: "#get_docker_submission/docker_repository"
       - id: docker_digest
-        source: "#validate_json/docker_digest"
+        source: "#get_docker_submission/docker_digest"
       - id: submissionid
         source: "#submissionId"
       - id: docker_registry
         source: "#get_docker_config/docker_registry"
       - id: docker_authentication
         source: "#get_docker_config/docker_authentication"
+      - id: status
+        source: "#validate_docker/status"
       - id: parentid
         source: "#submitterUploadSynId"
       - id: synapse_config
         source: "#synapseConfig"
-      # make sure previous step is run
+      - id: input_dir
+        valueFrom: "/home/thomasyu/train"
+      - id: docker_script
+        default:
+          class: File
+          location: "run_synthetic_training_docker.py"
+    out:
+      - id: model
+      - id: scratch
       - id: status
-        source: "#archive_docker/results"
-      # Update this data dir
+
+  run_docker_infer:
+    run: run_synthetic_infer_docker.cwl
+    in:
+      - id: docker_repository
+        source: "#get_docker_submission/docker_repository"
+      - id: docker_digest
+        source: "#get_docker_submission/docker_digest"
+      - id: submissionid
+        source: "#submissionId"
+      - id: docker_registry
+        source: "#get_docker_config/docker_registry"
+      - id: docker_authentication
+        source: "#get_docker_config/docker_authentication"
+      - id: status
+        source: "#validate_docker/status"
+      - id: parentid
+        source: "#submitterUploadSynId"
+      - id: synapse_config
+        source: "#synapseConfig"
+      - id: model
+        source: "#run_docker_train/model"
+      - id: scratch
+        source: "#run_docker_train/scratch"
       - id: input_dir
         valueFrom: "/home/thomasyu/validation"
       - id: docker_script

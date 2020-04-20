@@ -22,15 +22,31 @@ def main(args):
     #These are the volumes that you want to mount onto your docker container
     output_dir = os.path.join(os.getcwd(), "output")
     input_dir = args.input_dir
+    model_files = args.model_files
+    scratch_files = args.scratch_files
+
+    scratch_dir = os.path.join(os.getcwd(), "scratch")
+    os.mkdir(scratch_dir)
+
+    untar_command = ['tar', '-C', scratch_dir, '-xvf', scratch_files]
+    subprocess.check_call(untar_command)
+
+    model_dir = os.path.join(os.getcwd(), "model")
+    os.mkdir(model_dir)
+
+    untar_command = ['tar', '-C', model_dir, '-xvf', model_files]
+    subprocess.check_call(untar_command)
 
     # These are the locations on the docker that you want your mounted volumes
     # to be + permissions in docker (ro, rw)
     # It has to be in this format '/output:rw'
-    mounted_volumes = {input_dir:'/infer:ro',
+    mounted_volumes = {scratch_dir:'/scratch:rw',
+                       input_dir:'/infer:ro',
+                       model_dir:'/model:rw',
                        output_dir:'/output:rw'}
 
     #All mounted volumes here in a list
-    all_volumes = [input_dir, output_dir]
+    all_volumes = [scratch_dir, input_dir, model_dir, output_dir]
     #Mount volumes
     volumes = {}
     for vol in all_volumes:
