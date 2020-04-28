@@ -65,6 +65,10 @@ def main(args):
                 container = cont
     # If the container doesn't exist, make sure to run the docker image
     if container is None:
+        created_cont = client.containers.create(docker_image)
+        cmd = ['docker', 'cp', f'{created_cont.id}:/input.json', './']
+        # This above throws an error if /input.json doesn't exist
+        subprocess.check_call(cmd)
         #Run as detached, logs will stream below
         try:
             container = client.containers.run(docker_image,
