@@ -118,6 +118,32 @@ steps:
         source: "#synapseConfig"
     out: [finished]
 
+  validation_docker_email:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/validate_email.cwl
+    in:
+      - id: submissionid
+        source: "#submissionId"
+      - id: synapse_config
+        source: "#synapseConfig"
+      - id: status
+        source: "#validate_docker/status"
+      - id: invalid_reasons
+        source: "#validate_docker/invalid_reasons"
+      - id: errors_only
+        default: true
+    out: [finished]
+
+  check_docker_status:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/check_status.cwl
+    in:
+      - id: status
+        source: "#validate_docker/status"
+      - id: previous_annotation_finished
+        source: "#annotate_docker_validation_with_output/finished"
+      - id: previous_email_finished
+        source: "#validation_docker_email/finished"
+    out: [finished]
+
   get_docker_config:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/get_docker_config.cwl
     in:
@@ -149,6 +175,8 @@ steps:
         source: "#synapseConfig"
       - id: input_dir
         valueFrom: "/home/thomasyu/train"
+      - id: previous
+        source: "#check_docker_status/finished"
       - id: docker_script
         default:
           class: File
@@ -207,6 +235,8 @@ steps:
   #       source: "#get_docker_config/docker_authentication"
   #     - id: status
   #       source: "#validate_docker/status"
+  #     - id: previous
+  #       source: "#check_docker_status/finished"
   #     - id: parentid
   #       source: "#submitterUploadSynId"
   #     - id: synapse_config
@@ -285,6 +315,8 @@ steps:
         source: "#validation/status"
       - id: invalid_reasons
         source: "#validation/invalid_reasons"
+      - id: errors_only
+        default: true
     out: []
 
   annotate_validation_with_output:
@@ -341,7 +373,9 @@ steps:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/check_status.cwl
     in:
       - id: status
-        source: "#validate_docker/status"
+        source: "#validation/status"
       - id: previous_annotation_finished
-        source: "#annotate_status/finished"
+        source: "#annotate_validation_with_output/finished"
+      - id: previous_email_finished
+        source: "#validation_email/finished"
     out: [finished]

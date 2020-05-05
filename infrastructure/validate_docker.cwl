@@ -70,7 +70,7 @@ requirements:
             return(bearer_token_request.json()['token'])
 
           invalid_reasons = []
-        
+          labels = {}
           # Submission must be a Docker image, not Project/Folder/File
           if args.docker_repository and args.docker_digest:
 
@@ -105,9 +105,9 @@ requirements:
             features = ['age', 'gender', 'cough', 'fever', 'fatigue']
 
             if labels and required_labels.issubset(labels.keys()):
-              if labels['challenge'] != "covid19"
+              if labels['challenge'] != "covid19":
                 invalid_reasons.append("challenge LABEL must be covid19")
-              if labels['description'] == ''
+              if labels['description'] == '':
                 invalid_reasons.append("description LABEL can't be blank")
               if {labels['ranked_features'].split(",")}.issubset(features):
                 invalid_reasons.append("ranked_features LABEL must be one of {}".format(",".join(features)))
@@ -119,6 +119,7 @@ requirements:
           status = "INVALID" if invalid_reasons else "VALID"
           result = {'submission_errors':"\n".join(invalid_reasons),
                     'submission_status':status}
+          result.update(labels)
           with open(args.results, 'w') as o:
             o.write(json.dumps(result))
 
