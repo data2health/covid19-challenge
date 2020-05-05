@@ -71,7 +71,7 @@ steps:
       - id: results
       
   validate_docker:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/validate_docker.cwl
+    run: validate_docker.cwl
     in:
       - id: docker_repository
         source: "#get_docker_submission/docker_repository"
