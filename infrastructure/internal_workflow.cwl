@@ -277,6 +277,15 @@ steps:
         source: "#synapseConfig"
     out: [finished]
 
+  check_status:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/check_status.cwl
+    in:
+      - id: status
+        source: "#validation/status"
+      - id: previous_annotation_finished
+        source: "#annotate_validation_with_output/finished"
+    out: [finished]
+
   scoring:
     run: score.cwl
     in:
@@ -288,6 +297,8 @@ steps:
         source: "#submissionId"
       - id: status
         source: "#validation/status"
+      - id: previous
+        source: "#check_status/finished"
     out:
       - id: results
 

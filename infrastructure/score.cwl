@@ -19,6 +19,8 @@ inputs:
     type: string
   - id: submissionid
     type: int
+  - id: previous
+    type: boolean
 
 arguments:
   - valueFrom: $(inputs.inputfile.path)
