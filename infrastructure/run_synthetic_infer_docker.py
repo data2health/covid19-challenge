@@ -147,23 +147,6 @@ def main(args):
                         "please check inference docker")
 
 
-def quitting(signo, _frame, submissionid=None, docker_image=None):
-    """When quit signal, stop docker container and delete image"""
-    print("Interrupted by %d, shutting down" % signo)
-    client = docker.from_env()
-    try:
-        cont = client.containers.get(submissionid)
-        cont.stop()
-        cont.remove()
-    except Exception:
-        pass
-    try:
-        client.images.remove(docker_image, force=True)
-    except Exception:
-        pass
-    sys.exit(0)
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-s", "--submissionid", required=True,
@@ -184,12 +167,4 @@ if __name__ == '__main__':
     parser.add_argument("-f", "--scratch_files", required=True,
                         help="scratch files")
     args = parser.parse_args()
-    client = docker.from_env()
-    docker_image = args.docker_repository + "@" + args.docker_digest
-
-    quit_sub = partial(quitting, submissionid=args.submissionid,
-                       docker_image=docker_image)
-    for sig in ('TERM', 'HUP', 'INT'):
-        signal.signal(getattr(signal, 'SIG'+sig), quit_sub)
-
     main(args)
