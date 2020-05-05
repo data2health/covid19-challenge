@@ -317,7 +317,7 @@ steps:
         source: "#validation/invalid_reasons"
       - id: errors_only
         default: true
-    out: []
+    out: [finished]
 
   annotate_validation_with_output:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl

@@ -109,7 +109,7 @@ requirements:
                 invalid_reasons.append("challenge LABEL must be covid19")
               if labels['description'] == '':
                 invalid_reasons.append("description LABEL can't be blank")
-              if {labels['ranked_features'].split(",")}.issubset(features):
+              if not set(labels['ranked_features'].split(",")).issubset(features):
                 invalid_reasons.append("ranked_features LABEL must be one of {}".format(",".join(features)))
             else:
               invalid_reasons.append("Dockerfile must contain these Dockerfile LABELs: {}".format(",".join(required_labels)))
