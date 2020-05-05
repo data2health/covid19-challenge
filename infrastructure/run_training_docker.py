@@ -180,7 +180,12 @@ def main(syn, args):
 
     list_model = os.listdir(model_dir)
     if not list_model:
-        raise Exception("No model generated, please check training docker")
+        # raise Exception("No model generated, please check training docker")
+        model_fill = os.path.join(model_dir, "model_fill.txt")
+        open(model_fill, 'w').close()
+        log_text = "No training files generated"
+        create_log_file(log_filename, log_text=log_text)
+        store_log_file(syn, log_filename, args.parentid)
 
     tar(model_dir, 'model_files.tar.gz')
 
