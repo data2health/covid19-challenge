@@ -165,7 +165,7 @@ steps:
   #   out:
   #     - id: predictions
 
-  run_docker_train:
+ run_docker_train:
     run: run_training_docker.cwl
     in:
       - id: docker_repository
@@ -220,6 +220,8 @@ steps:
         source: "#run_docker_train/scratch"
       - id: input_dir
         valueFrom: "uw_omop_evaluation"
+      - id: stage
+        valueFrom: "first"
       - id: docker_script
         default:
           class: File
