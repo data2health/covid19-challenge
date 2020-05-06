@@ -359,7 +359,7 @@ steps:
       - id: parentid
         source: "#submitterUploadSynId"
       - id: evaluationid
-        valueFrom: "#get_submit_queue/evaluation_id"
+        source: "#get_submit_queue/evaluation_id"
       - id: previous_annotation_finished
         source: "#annotate_validation_with_output/finished"
         # source: "#annotate_docker_validation_with_output/finished"
