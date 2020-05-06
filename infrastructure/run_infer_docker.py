@@ -96,7 +96,9 @@ def main(args):
         while container in client.containers.list():
             log_text = container.logs()
             with open(log_filename, 'w') as log_file:
-                log_file.write(log_text)
+                if isinstance(log_text, bytes):
+                    log_text = log_text.decode('utf-8')
+                log_file.write(log_text.encode("ascii", "ignore").decode("ascii"))
             statinfo = os.stat(log_filename)
             # if statinfo.st_size > 0 and statinfo.st_size/1000.0 <= 50:
             if statinfo.st_size > 0:
@@ -110,7 +112,9 @@ def main(args):
         # Must run again to make sure all the logs are captured
         log_text = container.logs()
         with open(log_filename, 'w') as log_file:
-            log_file.write(log_text)
+            if isinstance(log_text, bytes):
+                log_text = log_text.decode('utf-8')
+            log_file.write(log_text.encode("ascii", "ignore").decode("ascii"))
 
         subprocess.check_call(["docker", "cp", os.path.abspath(log_filename),
                                "logging:/logs/" + str(args.submissionid) + "/"])
