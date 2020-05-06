@@ -102,15 +102,15 @@ requirements:
             blob_resp = requests.get(blob_request_url, headers={'Authorization': 'Bearer %s' % token})
             labels = blob_resp.json()['container_config']['Labels']
             required_labels = {'challenge', 'description', 'ranked_features', 'references'}
-            features = ['age', 'gender', 'cough', 'fever', 'fatigue']
+            # features = ['age', 'gender', 'cough', 'fever', 'fatigue']
 
             if labels and required_labels.issubset(labels.keys()):
               if labels['challenge'] != "covid19":
                 invalid_reasons.append("challenge LABEL must be covid19")
               if labels['description'] == '':
-                invalid_reasons.append("description LABEL can't be blank")
-              if not set(labels['ranked_features'].split(",")).issubset(features):
-                invalid_reasons.append("ranked_features LABEL must be one of {}".format(",".join(features)))
+                invalid_reasons.append("description LABEL can't be empty string")
+              if labels['ranked_features'].split(",")[0] == '':
+                invalid_reasons.append("ranked_features LABEL can't be empty string")
             else:
               invalid_reasons.append("Dockerfile must contain these Dockerfile LABELs: {}".format(",".join(required_labels)))
           else:
