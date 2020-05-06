@@ -334,6 +334,17 @@ steps:
         source: "#synapseConfig"
     out: [finished]
 
+  get_submit_queue:
+    run: get_evaluation_id.cwl
+    in:
+      - id: submissionid
+        source: "#submissionId"
+      - id: synapse_config
+        source: "#synapseConfig"
+    out:
+      - id: results
+      - id: evaluation_id
+
   submit_to_challenge:
     run: submit_to_challenge.cwl
     in:
@@ -348,7 +359,7 @@ steps:
       - id: parentid
         source: "#submitterUploadSynId"
       - id: evaluationid
-        valueFrom: "9614451"
+        valueFrom: "#get_submit_queue/evaluation_id"
       - id: previous_annotation_finished
         source: "#annotate_validation_with_output/finished"
         # source: "#annotate_docker_validation_with_output/finished"
