@@ -112,7 +112,7 @@ requirements:
           else:
             submission_status = "SCORING"
             
-          result = {'prediction_file_errors': "\n".join(invalid_reasons),
+          result = {'submission_errors': "\n".join(invalid_reasons),
                     'prediction_file_status': prediction_file_status,
                     'submission_status': submission_status,
                     'round': 1}
@@ -138,4 +138,4 @@ outputs:
     outputBinding:
       glob: results.json
       loadContents: true
-      outputEval: $(JSON.parse(self[0].contents)['prediction_file_errors'])
+      outputEval: $(JSON.parse(self[0].contents)['submission_errors'])
