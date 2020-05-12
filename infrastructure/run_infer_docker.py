@@ -47,7 +47,7 @@ def main(args):
     # to be + permissions in docker (ro, rw)
     # It has to be in this format '/output:rw'
     mounted_volumes = {scratch_dir:'/scratch:z',
-                       input_dir:'/infer:ro',
+                       input_dir:'/data:ro',
                        model_dir:'/model:z',
                        output_dir:'/output:z'}
 
@@ -116,8 +116,8 @@ def main(args):
                 log_text = log_text.decode('utf-8')
             log_file.write(log_text.encode("ascii", "ignore").decode("ascii"))
 
-        subprocess.check_call(["docker", "cp", os.path.abspath(log_filename),
-                               "logging:/logs/" + str(args.submissionid) + "/"])
+        # subprocess.check_call(["docker", "cp", os.path.abspath(log_filename),
+        #                        "logging:/logs/" + str(args.submissionid) + "/"])
         statinfo = os.stat(log_filename)
         # Only store log file if > 0 bytes
         if statinfo.st_size > 0: # and statinfo.st_size/1000.0 <= 50
@@ -133,8 +133,8 @@ def main(args):
         with open(inspection_path, "w") as inspection_output:
             json.dump(inspection, inspection_output, indent=4)
 
-        subprocess.check_call(["docker", "cp", os.path.abspath(inspection_path),
-                               "logging:/logs/" + str(args.submissionid) + "/"])
+        # subprocess.check_call(["docker", "cp", os.path.abspath(inspection_path),
+        #                        "logging:/logs/" + str(args.submissionid) + "/"])
 
         #Remove container and image after being done
         container.remove()
@@ -166,9 +166,9 @@ def main(args):
     elif "predictions.csv" not in output_folder:
         raise Exception("No 'predictions.csv' file written to /output, "
                         "please check inference docker")
-    else:
-        subprocess.check_call(["docker", "cp", os.path.join(output_dir,  "predictions.csv"),
-                               "logging:/logs/" + str(args.submissionid) + "/" + str(stage) + "_predictions.csv"])
+    # else:
+        # subprocess.check_call(["docker", "cp", os.path.join(output_dir,  "predictions.csv"),
+        #                        "logging:/logs/" + str(args.submissionid) + "/" + str(stage) + "_predictions.csv"])
 
 
 if __name__ == '__main__':
