@@ -53,7 +53,65 @@ steps:
         source: "#synapseConfig"
     out:
       - id: submissionid
-  
+      - id: evaluation_id
+      - id: results
+
+  get_site_information:
+    run: get_site.cwl
+    in:
+      - id: evaluation_id
+        source: "#get_submissionid/evaluation_id"
+    out:
+      - id: site
+      - id: dataset_version
+
+  create_dataset_version_json:
+    run: create_dataset_version.cwl
+    in:
+      - id: version
+        source: "#get_site_information/dataset_version"
+      - id: site
+        source: "#get_submissionid/evaluation_id"
+    out: [json_out]
+
+  create_internal_dataset_version_json:
+    run: create_internal_dataset_version.cwl
+    in:
+      - id: version
+        source: "#get_site_information/dataset_version"
+    out: [json_out]
+
+  annotate_dataset_version:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
+    in:
+      - id: submissionid
+        source: "#get_submissionid/submissionid"
+      - id: annotation_values
+        source: "#create_dataset_version_json/json_out"
+      - id: to_public
+        default: true
+      - id: force
+        default: true
+      - id: synapse_config
+        source: "#synapseConfig"
+    out: [finished]
+
+  annotate_internal_dataset_version
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
+    in:
+      - id: submissionid
+        source: "#submissionId"
+      - id: annotation_values
+        source: "#create_internal_dataset_version_json/json_out"
+      - id: to_public
+        default: true
+      - id: force
+        default: true
+      - id: synapse_config
+        source: "#synapseConfig"
+    out: [finished]
+
+
   download_goldstandard:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/v0.1/synapse-get-tool.cwl
     in:
@@ -261,7 +319,6 @@ steps:
         source: "#validation/status"
       - id: invalid_reasons
         source: "#validation/invalid_reasons"
-
     out: []
 
   annotate_validation_with_output:
@@ -315,11 +372,35 @@ steps:
         source: "#scoring/results"
     out: []
 
-  annotate_submission_with_output:
+  # Add tool to revise scores to add extra dataset queue
+  modify_annotations:
+    run: modify_annotations.cwl
+    in:
+      - id: inputjson
+        source: "#scoring/results"
+    out: [results]
+
+  annotate_main_submission_with_scores:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
     in:
       - id: submissionid
         source: "#get_submissionid/submissionid"
+      - id: annotation_values
+        source: "#modify_annotations/results"
+      - id: to_public
+        default: true
+      - id: force
+        default: true
+      - id: synapse_config
+        source: "#synapseConfig"
+    out: [finished]
+
+  # annotate internal submission with scores
+  annotate_submission_with_scores:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
+    in:
+      - id: submissionid
+        source: "#submissionId"
       - id: annotation_values
         source: "#scoring/results"
       - id: to_public
