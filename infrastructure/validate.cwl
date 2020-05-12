@@ -110,7 +110,7 @@ requirements:
           if prediction_file_status == "INVALID":
             submission_status = "INVALID"
           else:
-            submission_status = "SCORING"
+            submission_status = "ACCEPTED"
             
           result = {'submission_errors': "\n".join(invalid_reasons),
                     'prediction_file_status': prediction_file_status,
