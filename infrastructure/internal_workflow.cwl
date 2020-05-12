@@ -116,8 +116,7 @@ steps:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/v0.1/synapse-get-tool.cwl
     in:
       - id: synapseid
-        #This is a dummy syn id, replace when you use your own workflow
-        valueFrom: "syn18081597"
+        valueFrom: "syn22036993"
       - id: synapse_config
         source: "#synapseConfig"
     out:
@@ -222,8 +221,7 @@ steps:
   #         location: "run_docker.py"
   #   out:
   #     - id: predictions
-
- run_docker_train:
+  run_docker_train:
     run: run_training_docker.cwl
     in:
       - id: docker_repository
@@ -242,8 +240,10 @@ steps:
         source: "#get_docker_submission/submitter_synid"
       - id: synapse_config
         source: "#synapseConfig"
+      #- id: input_dir
+      #  valueFrom: "uw_omop_train"
       - id: input_dir
-        valueFrom: "uw_omop_train"
+        valueFrom: "/home/thomasyu/validation"
       - id: docker_script
         default:
           class: File
@@ -276,8 +276,10 @@ steps:
         source: "#run_docker_train/model"
       - id: scratch
         source: "#run_docker_train/scratch"
+#      - id: input_dir
+#        valueFrom: "uw_omop_evaluation"
       - id: input_dir
-        valueFrom: "uw_omop_evaluation"
+        valueFrom: "/home/thomasyu/validation"
       - id: stage
         valueFrom: "first"
       - id: docker_script

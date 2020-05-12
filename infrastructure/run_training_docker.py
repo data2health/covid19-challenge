@@ -87,6 +87,9 @@ def main(syn, args):
     # directory = "/data/common/DREAM Challenge/data/submissions"
     scratch_dir = os.path.join(os.getcwd(), "scratch")
     model_dir = os.path.join(os.getcwd(), "model")
+    os.mkdir(scratch_dir)
+    os.mkdir(model_dir)
+
     input_dir = args.input_dir
 
     print("mounting volumes")
@@ -94,7 +97,7 @@ def main(syn, args):
     # volumes to be + permissions in docker (ro, rw)
     # It has to be in this format '/output:rw'
     mounted_volumes = {scratch_dir: '/scratch:z',
-                       input_dir: '/train:ro',
+                       input_dir: '/data:ro',
                        model_dir: '/model:z'}
     #All mounted volumes here in a list
     all_volumes = [scratch_dir, input_dir, model_dir]
@@ -151,10 +154,11 @@ def main(syn, args):
         log_text = container.logs()
         create_log_file(log_filename, log_text=log_text)
 
-        subprocess.check_call(["docker", "exec", "logging", "mkdir",
-                               "logs/" + str(args.submissionid)])
-        subprocess.check_call(["docker", "cp", os.path.abspath(log_filename),
-                               "logging:/logs/" + str(args.submissionid) + "/"])
+        # subprocess.check_call(["docker", "exec", "logging", "mkdir",
+        #                        "logs/" + str(args.submissionid)])
+        # subprocess.check_call(["docker", "cp", os.path.abspath(log_filename),
+        #                        "logging:/logs/" + str(args.submissionid) + "/"])
+
         # subprocess.check_call(["docker", "cp", os.path.abspath(stats_log),
         #                        "logging:/logs/" + str(args.submissionid) + "/"])
 
@@ -164,8 +168,8 @@ def main(syn, args):
         with open(inspection_path, "w") as inspection_output:
             json.dump(inspection, inspection_output, indent=4)
 
-        subprocess.check_call(["docker", "cp", os.path.abspath(inspection_path),
-                               "logging:/logs/" + str(args.submissionid) + "/"])
+        # subprocess.check_call(["docker", "cp", os.path.abspath(inspection_path),
+        #                        "logging:/logs/" + str(args.submissionid) + "/"])
 
         # Remove container and image after being done
         container.remove()
@@ -215,5 +219,6 @@ if __name__ == '__main__':
                         help="Parent Id of submitter directory")
     parser.add_argument("--status", required=True, help="Docker image status")
     args = parser.parse_args()
+    syn = synapseclient.Synapse(configPath=args.synapse_config)
     syn.login()
     main(syn, args)
