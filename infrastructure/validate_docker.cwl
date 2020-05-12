@@ -112,6 +112,7 @@ requirements:
               if labels['ranked_features'].split(",")[0] == '':
                 invalid_reasons.append("ranked_features LABEL can't be empty string")
             else:
+              labels = {}
               invalid_reasons.append("Dockerfile must contain these Dockerfile LABELs: {}".format(",".join(required_labels)))
           else:
             invalid_reasons.append("Submission must be a Docker image, not Project/Folder/File. Please visit 'Docker Submission' for more information.")
