@@ -44,7 +44,7 @@ def main(args):
     # to be + permissions in docker (ro, rw)
     # It has to be in this format '/output:rw'
     mounted_volumes = {scratch_dir:'/scratch:rw',
-                       input_dir:'/infer:ro',
+                       input_dir:'/data:ro',
                        model_dir:'/model:rw',
                        output_dir:'/output:rw'}
 
