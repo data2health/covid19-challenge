@@ -42,6 +42,10 @@ requirements:
           syn.login()
           sub = syn.getSubmission(args.submissionid, downloadLocation=".")
 
+          evaluation_dict = {"evaluation_id": sub.evaluationId}
+          with open("results.json", 'w') as json_file:
+            json_file.write(json.dumps(evaluation_dict))
+
 outputs:
   - id: submissionid
     type: int
@@ -50,3 +54,15 @@ outputs:
       glob: submission.json
       loadContents: true
       outputEval: $(JSON.parse(self[0].contents)['submissionid'])
+
+  - id: evaluation_id
+    type: string
+    outputBinding:
+      glob: results.json
+      loadContents: true
+      outputEval: $(JSON.parse(self[0].contents)['evaluation_id'])
+
+  - id: results
+    type: File
+    outputBinding:
+      glob: results.json
