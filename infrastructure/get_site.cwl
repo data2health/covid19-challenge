@@ -21,7 +21,7 @@ outputs:
 expression: |
 
   ${
-    if (inputs.evaluation_id == "9614494" or inputs.evaluation_id == "9614451"){
+    if (inputs.evaluation_id == "9614494" || inputs.evaluation_id == "9614451"){
       return {site: "UW", dataset_version: "version1"};
     } else {
       throw 'no dataset goldstandard';

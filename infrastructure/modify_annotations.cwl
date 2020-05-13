@@ -8,16 +8,20 @@ baseCommand: python3
 
 hints:
   DockerRequirement:
-    dockerPull: docker.synapse.org/syn18058986/synapsepythonclient:2.0.0
+    dockerPull: sagebionetworks/synapsepythonclient:v2.0.0
 
 inputs:
   - id: inputjson
     type: File
+  - id: site
+    type: string
 
 arguments:
   - valueFrom: switch_annotation.py
   - valueFrom: $(inputs.inputjson.path)
     prefix: -j
+  - valueFrom: $(inputs.site)
+    prefix: -s
   - valueFrom: results.json
     prefix: -r
 
@@ -39,8 +43,8 @@ requirements:
           with open(args.json, "r") as input:
             result = json.load(input)
 
-          new_score = {f'{center}_AUC': result['score_AUC'],
-                       f'{center}_PRAUC': result['score_PRAUC']}
+          new_score = {f'{args.site}_AUC': result['score_AUC'],
+                       f'{args.site}_PRAUC': result['score_PRAUC']}
 
           with open(args.results, 'w') as o:
             o.write(json.dumps(new_score))

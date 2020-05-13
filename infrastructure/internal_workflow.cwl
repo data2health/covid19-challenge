@@ -71,7 +71,7 @@ steps:
       - id: version
         source: "#get_site_information/dataset_version"
       - id: site
-        source: "#get_submissionid/evaluation_id"
+        source: "#get_site_information/site"
     out: [json_out]
 
   create_internal_dataset_version_json:
@@ -96,7 +96,7 @@ steps:
         source: "#synapseConfig"
     out: [finished]
 
-  annotate_internal_dataset_version
+  annotate_internal_dataset_version:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
     in:
       - id: submissionid
@@ -110,7 +110,6 @@ steps:
       - id: synapse_config
         source: "#synapseConfig"
     out: [finished]
-
 
   download_goldstandard:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/v0.1/synapse-get-tool.cwl
@@ -380,6 +379,8 @@ steps:
     in:
       - id: inputjson
         source: "#scoring/results"
+      - id: site
+        source: "#get_site_information/site"
     out: [results]
 
   annotate_main_submission_with_scores:
