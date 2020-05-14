@@ -58,8 +58,7 @@ steps:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/v0.1/synapse-get-tool.cwl
     in:
       - id: synapseid
-        #This is a dummy syn id, replace when you use your own workflow
-        valueFrom: "syn18081597"
+        valueFrom: "syn22043503"
       - id: synapse_config
         source: "#synapseConfig"
     out:
@@ -185,7 +184,7 @@ steps:
       - id: synapse_config
         source: "#synapseConfig"
       - id: input_dir
-        valueFrom: "uw_omop_train"
+        valueFrom: "uw_omop_covid_training"
       - id: docker_script
         default:
           class: File
@@ -219,7 +218,7 @@ steps:
       - id: scratch
         source: "#run_docker_train/scratch"
       - id: input_dir
-        valueFrom: "uw_omop_evaluation"
+        valueFrom: "uw_omop_covid_05-06-2020"
       - id: stage
         valueFrom: "first"
       - id: docker_script
