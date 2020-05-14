@@ -19,7 +19,8 @@ requirements:
     listing:
       - entryname: update_status.json
         entry: |
-          {"$(inputs.site)_dataset_version": \"$(inputs.version)\"}
+          {"$(inputs.site)_dataset_version": \"$(inputs.version)\",
+           "$(inputs.site)_submission_status": \"EVALUATION_IN_PROGRESS\"}
 
 outputs:
   - id: json_out
