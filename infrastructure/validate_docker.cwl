@@ -121,6 +121,18 @@ requirements:
           result = {'submission_errors':"\n".join(invalid_reasons),
                     'submission_status':status}
           result.update(labels)
+          if labels:
+            features = ", ".join(labels['ranked_features'].split(","))
+            references = ", ".join(labels['references'].split(","))
+            result['detailed_information'] = (
+              "<details>\n\n"
+              "<summary>Expand for details</summary>\n\n"
+              f"**description:** {labels['description']}\n"
+              f"**ranked_features:** {features}\n"
+              f"**references:** {references}\n\n"
+              "</details>")
+          else:
+            result['detailed_information'] = ''
           with open(args.results, 'w') as o:
             o.write(json.dumps(result))
 
