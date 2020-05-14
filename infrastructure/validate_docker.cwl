@@ -117,7 +117,7 @@ requirements:
           else:
             invalid_reasons.append("Submission must be a Docker image, not Project/Folder/File. Please visit 'Docker Submission' for more information.")
         
-          status = "INVALID" if invalid_reasons else "VALID"
+          status = "INVALID" if invalid_reasons else "EVALUATION_IN_PRORGRESS"
           result = {'submission_errors':"\n".join(invalid_reasons),
                     'submission_status':status}
           result.update(labels)
