@@ -44,7 +44,8 @@ requirements:
             result = json.load(input)
 
           new_score = {f'{args.site}_AUC': result['score_AUC'],
-                       f'{args.site}_PRAUC': result['score_PRAUC']}
+                       f'{args.site}_PRAUC': result['score_PRAUC'],
+                       f'{args.site}_submission_status': 'SCORED'}
 
           with open(args.results, 'w') as o:
             o.write(json.dumps(new_score))
