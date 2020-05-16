@@ -127,9 +127,9 @@ requirements:
             result['detailed_information'] = (
               "<details>\n\n"
               "<summary>Expand for details</summary>\n\n"
-              f"**description:** {labels['description']}\n"
-              f"**ranked_features:** {features}\n"
-              f"**references:** {references}\n\n"
+              f"**Description:** {labels['description']}\n"
+              f"**Ranked features:** {features}\n"
+              f"**References:** {references}\n\n"
               "</details>")
           else:
             result['detailed_information'] = ''
