@@ -117,10 +117,22 @@ requirements:
           else:
             invalid_reasons.append("Submission must be a Docker image, not Project/Folder/File. Please visit 'Docker Submission' for more information.")
         
-          status = "INVALID" if invalid_reasons else "VALID"
+          status = "INVALID" if invalid_reasons else "EVALUATION_IN_PRORGRESS"
           result = {'submission_errors':"\n".join(invalid_reasons),
                     'submission_status':status}
           result.update(labels)
+          if labels:
+            features = ", ".join(labels['ranked_features'].split(","))
+            references = ", ".join(labels['references'].split(","))
+            result['detailed_information'] = (
+              "<details>\n\n"
+              "<summary>Expand for details</summary>\n\n"
+              f"**Description:** {labels['description']}\n"
+              f"**Ranked features:** {features}\n"
+              f"**References:** {references}\n\n"
+              "</details>")
+          else:
+            result['detailed_information'] = ''
           with open(args.results, 'w') as o:
             o.write(json.dumps(result))
 
