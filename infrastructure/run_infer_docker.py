@@ -90,7 +90,8 @@ def main(args):
     open(log_filename, 'w').close()
 
     #Creating Logging directory
-    subprocess.check_call(["docker", "exec", "logging mkdir /logs/" + str(args.submissionid) + "/"])
+    #subprocess.check_call(["docker", "exec", "logging mkdir /logs/" + str(args.submissionid) + "/"])
+    subprocess.check_call(['docker', 'exec', 'logging', 'mkdir', '/logs/' + str(args.submissionid) + '/'])
 
     # If the container doesn't exist, there are no logs to write out and no
     # container to remove
