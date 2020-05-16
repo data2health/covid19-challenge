@@ -89,6 +89,9 @@ def main(args):
     log_filename = args.submissionid + "_" + str(stage) + "_log.txt"
     open(log_filename, 'w').close()
 
+    #Creating Logging directory
+    subprocess.check_call(["docker", "exec", "logging mkdir /logs/" + str(args.submissionid) + "/"])
+
     # If the container doesn't exist, there are no logs to write out and no
     # container to remove
     if container is not None:
