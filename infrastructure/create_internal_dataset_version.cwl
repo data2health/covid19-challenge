@@ -28,8 +28,8 @@ requirements:
            "infer_dataset_name": \"$(inputs.infer_name)\",
            "infer_dataset_version": \"$(inputs.infer_version)\",
            "submission_status": \"EVALUATION_IN_PROGRESS\",
-           "train_volume": \"$(inputs.train_name)+'_'+$(inputs.train_version)\",
-           "infer_volume": \"$(inputs.infer_name)+'_'+$(inputs.infer_version)\"}
+           "train_volume": \"$(inputs.train_name)_$(inputs.train_version)\",
+           "infer_volume": \"$(inputs.infer_name)_$(inputs.infer_version)\"}
 
 outputs:
   - id: json_out
