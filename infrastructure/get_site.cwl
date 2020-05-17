@@ -22,7 +22,11 @@ expression: |
 
   ${
     if (inputs.evaluation_id == "9614494" || inputs.evaluation_id == "9614451"){
-      return {site: "UW", dataset_version: "version1"};
+      return {site: "UW",
+              train_dataset_name: "uw_omop_covid",
+              train_dataset_version: "train"
+              infer_dataset_name: "uw_omop_covid"
+              infer_dataset_version: "05-06-2020"};
     } else {
       throw 'no dataset goldstandard';
     }
