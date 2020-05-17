@@ -63,23 +63,44 @@ steps:
         source: "#get_submissionid/evaluation_id"
     out:
       - id: site
-      - id: dataset_version
+      - id: train_dataset_name
+      - id: train_dataset_version
+      - id: infer_dataset_name
+      - id: infer_dataset_version
 
-  create_dataset_version_json:
-    run: create_dataset_version.cwl
-    in:
-      - id: version
-        source: "#get_site_information/dataset_version"
-      - id: site
-        source: "#get_site_information/site"
-    out: [json_out]
+  # create_dataset_json:
+  #   run: create_dataset_version.cwl
+  #   in:
+  #     - id: version
+  #       source: "#get_site_information/dataset_version"
+  #     - id: site
+  #       source: "#get_site_information/site"
+  #   out: [json_out]
 
-  create_internal_dataset_version_json:
+  create_internal_dataset_json:
     run: create_internal_dataset_version.cwl
     in:
-      - id: version
-        source: "#get_site_information/dataset_version"
-    out: [json_out]
+      - id: train_name
+        source: "#get_site_information/train_dataset_name"
+      - id: train_version
+        source: "#get_site_information/train_dataset_version"
+      - id: infer_name
+        source: "#get_site_information/infer_dataset_name"
+      - id: infer_version
+        source: "#get_site_information/infer_dataset_version"
+    out:
+      - id: json_out
+      - id: train_volume
+      - id: infer_volume
+
+  modify_dataset_annotations:
+    run: modify_annotations.cwl
+    in:
+      - id: inputjson
+        source: "#create_internal_dataset_json/json_out"
+      - id: site
+        source: "#get_site_information/site"
+    out: [results]
 
   annotate_dataset_version:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
@@ -87,7 +108,7 @@ steps:
       - id: submissionid
         source: "#get_submissionid/submissionid"
       - id: annotation_values
-        source: "#create_dataset_version_json/json_out"
+        source: "#modify_dataset_annotations/results"
       - id: to_public
         default: true
       - id: force
@@ -102,7 +123,7 @@ steps:
       - id: submissionid
         source: "#submissionId"
       - id: annotation_values
-        source: "#create_internal_dataset_version_json/json_out"
+        source: "#create_internal_dataset_json/json_out"
       - id: to_public
         default: true
       - id: force
@@ -242,7 +263,8 @@ steps:
       #- id: input_dir
       #  valueFrom: "uw_omop_train"
       - id: input_dir
-        valueFrom: "uw_omop_covid_training"
+        source: "#create_internal_dataset_json/train_volume"
+        # valueFrom: "uw_omop_covid_training"
       - id: docker_script
         default:
           class: File
@@ -276,7 +298,8 @@ steps:
       - id: scratch
         source: "#run_docker_train/scratch"
       - id: input_dir
-        valueFrom: "uw_omop_covid_05-06-2020"
+        source: "#create_internal_dataset_json/infer_volume"
+        # valueFrom: "uw_omop_covid_05-06-2020"
       - id: stage
         valueFrom: "first"
       - id: docker_script
