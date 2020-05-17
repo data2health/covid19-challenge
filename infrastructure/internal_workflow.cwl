@@ -320,11 +320,26 @@ steps:
         source: "#validation/invalid_reasons"
     out: []
 
-  annotate_validation_with_output:
+  annotate_main_submission_with_validation:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
     in:
       - id: submissionid
         source: "#get_submissionid/submissionid"
+      - id: annotation_values
+        source: "#validation/results"
+      - id: to_public
+        default: true
+      - id: force
+        default: true
+      - id: synapse_config
+        source: "#synapseConfig"
+    out: [finished]
+
+  annotate_validation_with_output:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
+    in:
+      - id: submissionid
+        source: "#submissionid"
       - id: annotation_values
         source: "#validation/results"
       - id: to_public
