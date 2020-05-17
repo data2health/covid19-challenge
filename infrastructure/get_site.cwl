@@ -15,7 +15,13 @@ requirements:
 outputs:
   - id: site
     type: string
-  - id: dataset_version
+  - id: train_dataset_name
+    type: string
+  - id: train_dataset_version
+    type: string
+  - id: infer_dataset_name
+    type: string
+    - id: infer_dataset_version
     type: string
 
 expression: |
