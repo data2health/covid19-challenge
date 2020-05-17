@@ -166,11 +166,11 @@ def main(args):
     output_folder = os.listdir(output_dir)
     pred_path = os.path.join(output_dir, "predictions.csv")
     if not output_folder:
-        with open(pred_path, 'w'):
-            pass
+        with open(pred_path, 'w') as p_out:
+            p_out.write("None")
     elif "predictions.csv" not in output_folder:
-        with open(pred_path, 'w'):
-            pass
+        with open(pred_path, 'w') as p_out:
+            p_out.write("None")
 
     subprocess.check_call(["docker", "cp", pred_path,
                            f"logging:/logs/{str(args.submissionid)}/{str(stage)}_predictions.csv"])

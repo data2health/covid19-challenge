@@ -143,12 +143,13 @@ def main(args):
         print("Unable to remove image")
 
     output_folder = os.listdir(output_dir)
+    pred_path = os.path.join(output_dir, "predictions.csv")
     if not output_folder:
-        raise Exception("No 'predictions.csv' file written to /output, "
-                        "please check inference docker")
+        with open(pred_path, 'w') as p_out:
+            p_out.write("None")
     elif "predictions.csv" not in output_folder:
-        raise Exception("No 'predictions.csv' file written to /output, "
-                        "please check inference docker")
+        with open(pred_path, 'w') as p_out:
+            p_out.write("None")
 
 
 if __name__ == '__main__':
