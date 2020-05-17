@@ -318,7 +318,7 @@ steps:
         source: "#validation/status"
       - id: invalid_reasons
         source: "#validation/invalid_reasons"
-    out: []
+    out: [finished]
 
   # Add tool to revise scores to add extra dataset queue
   modify_validation_annotations:
