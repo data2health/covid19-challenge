@@ -27,8 +27,8 @@ compute_scores <- function(submission_path, goldstandard_path) {
   roc<-roc.curve(x,y)
   pr <- pr.curve(x,y)
   # just return roc and pr
-  c('score_AUC' = round(roc$auc, 6),
-    'score_PRAUC' = round(pr$auc.integral, 6))
+  c('AUC' = round(roc$auc, 6),
+    'PRAUC' = round(pr$auc.integral, 6))
 }
 
 if (args$status == "VALIDATED") {
@@ -45,8 +45,8 @@ result_list = list()
 for (key in names(scores)) {
   result_list[[key]] = scores[[key]]
 }
-result_list[['AUC']] = as.numeric(result_list$score_AUC)
-result_list[['PRAUC']] = as.numeric(result_list$score_PRAUC)
+result_list[['AUC']] = as.numeric(result_list$AUC)
+result_list[['PRAUC']] = as.numeric(result_list$PRAUC)
 
 export_json <- toJSON(result_list, auto_unbox = TRUE, pretty=T)
 write(export_json, args$results)
