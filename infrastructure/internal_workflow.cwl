@@ -318,13 +318,38 @@ steps:
         source: "#validation/status"
       - id: invalid_reasons
         source: "#validation/invalid_reasons"
-    out: []
+    out: [finished]
+
+  # Add tool to revise scores to add extra dataset queue
+  modify_validation_annotations:
+    run: modify_annotations.cwl
+    in:
+      - id: inputjson
+        source: "#validation/results"
+      - id: site
+        source: "#get_site_information/site"
+    out: [results]
+
+  annotate_main_submission_with_validation:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
+    in:
+      - id: submissionid
+        source: "#get_submissionid/submissionid"
+      - id: annotation_values
+        source: "#modify_validation_annotations/results"
+      - id: to_public
+        default: true
+      - id: force
+        default: true
+      - id: synapse_config
+        source: "#synapseConfig"
+    out: [finished]
 
   annotate_validation_with_output:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
     in:
       - id: submissionid
-        source: "#get_submissionid/submissionid"
+        source: "#submissionId"
       - id: annotation_values
         source: "#validation/results"
       - id: to_public
@@ -341,7 +366,9 @@ steps:
       - id: status
         source: "#validation/status"
       - id: previous_annotation_finished
-        source: "#annotate_validation_with_output/finished"
+        source: "#annotate_main_submission_with_validation/finished"
+      - id: previous_email_finished
+        source: "#validation_email/finished"
     out: [finished]
 
   scoring:
@@ -369,6 +396,8 @@ steps:
         source: "#synapseConfig"
       - id: results
         source: "#scoring/results"
+      - id: private_annotations
+        default: ['submission_status']
     out: []
 
   # Add tool to revise scores to add extra dataset queue

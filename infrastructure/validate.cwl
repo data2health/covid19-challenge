@@ -75,37 +75,39 @@ requirements:
               prediction_file_status = "INVALID"
               invalid_reasons = ['Please submit a file to the challenge']
           else:
-              subdf = pd.read_csv(args.submission_file)
               invalid_reasons = []
               prediction_file_status = "VALIDATED"
-
-              if subdf.get("score") is None:
-                invalid_reasons.append("Submission must have 'score' column")
+              try:
+                subdf = pd.read_csv(args.submission_file)
+                if subdf.get("score") is None:
+                  invalid_reasons.append("Submission must have 'score' column")
+                  prediction_file_status = "INVALID"
+                else:
+                  try:
+                    subdf['score'] = subdf['score'].astype(float)
+                  except ValueError:
+                    invalid_reasons.append("Submission 'score' must contain values between 0 and 1")
+                    prediction_file_status = "INVALID"
+                  if subdf['score'].isnull().any():
+                    invalid_reasons.append("Submission 'score' must not contain any NA or blank values")
+                    prediction_file_status = "INVALID"
+                  if not all([score >= 0 and score <= 1 for score in subdf['score']]):
+                    invalid_reasons.append("Submission 'score' must contain values between 0 and 1")
+                    prediction_file_status = "INVALID"
+                if subdf.get("person_id") is None:
+                  invalid_reasons.append("Submission must have 'person_id' column")
+                  prediction_file_status = "INVALID"
+                else:
+                  goldstandard = pd.read_csv(args.goldstandard)
+                  if not goldstandard['person_id'].isin(subdf['person_id']).all():
+                    invalid_reasons.append("Submission 'person_id' does not have scores for all goldstandard patients.")
+                    prediction_file_status = "INVALID"
+                  if subdf['person_id'].duplicated().any():
+                    invalid_reasons.append("Submission has duplicated 'person_id' values.")
+                    prediction_file_status = "INVALID"
+              except pd.errors.EmptyDataError:
+                invalid_reasons.append("Your model did not generate a predictions.csv file.")
                 prediction_file_status = "INVALID"
-              else:
-                try:
-                  subdf['score'] = subdf['score'].astype(float)
-                except ValueError:
-                  invalid_reasons.append("Submission 'score' must contain values between 0 and 1")
-                  prediction_file_status = "INVALID"
-                if subdf['score'].isnull().any():
-                  invalid_reasons.append("Submission 'score' must not contain any NA or blank values")
-                  prediction_file_status = "INVALID"
-                if not all([score >= 0 and score <= 1 for score in subdf['score']]):
-                  invalid_reasons.append("Submission 'score' must contain values between 0 and 1")
-                  prediction_file_status = "INVALID"
-              
-              if subdf.get("person_id") is None:
-                invalid_reasons.append("Submission must have 'person_id' column")
-                prediction_file_status = "INVALID"
-              else:
-                goldstandard = pd.read_csv(args.goldstandard)
-                if not goldstandard['person_id'].isin(subdf['person_id']).all():
-                  invalid_reasons.append("Submission 'person_id' does not have scores for all goldstandard patients.")
-                  prediction_file_status = "INVALID"
-                if subdf['person_id'].duplicated().any():
-                  invalid_reasons.append("Submission has duplicated 'person_id' values.")
-                  prediction_file_status = "INVALID"
 
           if prediction_file_status == "INVALID":
             submission_status = "INVALID"
@@ -114,8 +116,7 @@ requirements:
             
           result = {'submission_errors': "\n".join(invalid_reasons),
                     'prediction_file_status': prediction_file_status,
-                    'submission_status': submission_status,
-                    'round': 1}
+                    'submission_status': submission_status}
           with open(args.results, 'w') as o:
               o.write(json.dumps(result))
      
