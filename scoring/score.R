@@ -38,6 +38,9 @@ if (args$status == "VALIDATED") {
 }
 
 prediction_file_status = "SCORED"
+# Both of these are necessary for the workflows to work.
+# TODO: Patch workflow tool to accept submission_status
+#       so prediction_file_status can be removed
 scores[['submission_status']] = prediction_file_status
 scores[['prediction_file_status']] = prediction_file_status
 
