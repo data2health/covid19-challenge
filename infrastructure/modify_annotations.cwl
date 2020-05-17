@@ -42,11 +42,13 @@ requirements:
           
           with open(args.json, "r") as input:
             result = json.load(input)
-
-          new_score = {f'{args.site}_AUC': result['score_AUC'],
-                       f'{args.site}_PRAUC': result['score_PRAUC'],
-                       f'{args.site}_submission_status': 'SCORED'}
-
+          #if not args.validation:
+          # new_score = {f'{args.site}_AUC': result['score_AUC'],
+          #               f'{args.site}_PRAUC': result['score_PRAUC'],
+          #               f'{args.site}_submission_status': 'SCORED'}
+          #else:
+          #  {}
+          new_score = {f'{args.site}_{key}': value for key, value in result.items()}
           with open(args.results, 'w') as o:
             o.write(json.dumps(new_score))
      

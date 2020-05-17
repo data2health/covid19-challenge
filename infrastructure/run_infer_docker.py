@@ -164,15 +164,16 @@ def main(args):
         print("Unable to remove image")
 
     output_folder = os.listdir(output_dir)
+    pred_path = os.path.join(output_dir, "predictions.csv")
     if not output_folder:
-        raise Exception("No 'predictions.csv' file written to /output, "
-                        "please check inference docker")
+        with open(pred_path, 'w') as p_out:
+            p_out.write("None")
     elif "predictions.csv" not in output_folder:
-        raise Exception("No 'predictions.csv' file written to /output, "
-                        "please check inference docker")
-    else:
-        subprocess.check_call(["docker", "cp", os.path.join(output_dir,  "predictions.csv"),
-                               "logging:/logs/" + str(args.submissionid) + "/" + str(stage) + "_predictions.csv"])
+        with open(pred_path, 'w') as p_out:
+            p_out.write("None")
+
+    subprocess.check_call(["docker", "cp", pred_path,
+                           f"logging:/logs/{str(args.submissionid)}/{str(stage)}_predictions.csv"])
 
 
 if __name__ == '__main__':
