@@ -144,12 +144,9 @@ def main(args):
 
     output_folder = os.listdir(output_dir)
     pred_path = os.path.join(output_dir, "predictions.csv")
-    if not output_folder:
+    if not output_folder or "predictions.csv" not in output_folder:
         with open(pred_path, 'w') as p_out:
-            p_out.write("None")
-    elif "predictions.csv" not in output_folder:
-        with open(pred_path, 'w') as p_out:
-            p_out.write("None")
+            pass
 
 
 if __name__ == '__main__':
