@@ -188,7 +188,10 @@ def main():
     print("Make sure you run")
     print(f"git add infrastructure/{question}_workflow.cwl")
     print(f"git add infrastructure/{question}_internal_workflow.cwl")
-
+    # TODO: auto create leaderboard
+    print("Add leaderboards")
+    print("Edit get_evaluation_id.cwl")
+    # TODO: Create table with evaluation id mappings
 
 if __name__ == "__main__":
     main()
