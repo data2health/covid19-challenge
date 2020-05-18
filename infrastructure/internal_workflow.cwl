@@ -63,29 +63,17 @@ steps:
         source: "#get_submissionid/evaluation_id"
     out:
       - id: site
-      - id: train_dataset_name
+      - id: dataset_name
       - id: train_dataset_version
-      - id: infer_dataset_name
       - id: infer_dataset_version
-
-  # create_dataset_json:
-  #   run: create_dataset_version.cwl
-  #   in:
-  #     - id: version
-  #       source: "#get_site_information/dataset_version"
-  #     - id: site
-  #       source: "#get_site_information/site"
-  #   out: [json_out]
 
   create_internal_dataset_json:
     run: create_internal_dataset_version.cwl
     in:
-      - id: train_name
-        source: "#get_site_information/train_dataset_name"
+      - id: dataset_name
+        source: "#get_site_information/dataset_name"
       - id: train_version
         source: "#get_site_information/train_dataset_version"
-      - id: infer_name
-        source: "#get_site_information/infer_dataset_name"
       - id: infer_version
         source: "#get_site_information/infer_dataset_version"
     out:
