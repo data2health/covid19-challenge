@@ -15,11 +15,9 @@ requirements:
 outputs:
   - id: site
     type: string
-  - id: train_dataset_name
+  - id: dataset_name
     type: string
   - id: train_dataset_version
-    type: string
-  - id: infer_dataset_name
     type: string
   - id: infer_dataset_version
     type: string
@@ -29,9 +27,8 @@ expression: |
   ${
     if (inputs.evaluation_id == "9614494" || inputs.evaluation_id == "9614451"){
       return {site: "UW",
-              train_dataset_name: "uw_omop_covid",
-              train_dataset_version: "train",
-              infer_dataset_name: "uw_omop_covid",
+              dataset_name: "uw_omop_covid_q1",
+              train_dataset_version: "05-06-2020",
               infer_dataset_version: "05-06-2020"};
     } else {
       throw 'no dataset goldstandard';
