@@ -49,13 +49,13 @@ requirements:
           if sub.evaluationId == "9614453":
             submit_to = "9614494"
           # Q1 UW TEST
-          else if sub.evaluationId == "9614450":
+          elif sub.evaluationId == "9614450":
             submit_to = "9614451"
           # Q2 UW
-          else if sub.evaluationId == "9614502":
+          elif sub.evaluationId == "9614502":
             submit_to = "9614504"
           # Q2 UW TEST
-          else if sub.evaluationId == "9614450":
+          elif sub.evaluationId == "9614450":
             submit_to = "9614503"
           else:
             raise ValueError("Evaluation Id not set")
