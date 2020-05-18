@@ -20,8 +20,6 @@ Please run `scripts/add_challenge.py`. An example would be
 ```
 # This will add the main submission queues + internal queues
 python add_challenge.py 2 --sites UW
-# This will only add the internal queues
-python add_challenge.py 2 --sites UW --only_internal
 ```
 
 Please follow the instructions printed out from `add_challenge.py`.  An example would be:

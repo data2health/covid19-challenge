@@ -102,8 +102,6 @@ def create_main_bundle(syn: Synapse, question: int):
                     'READ_PRIVATE_SUBMISSION', 'CHANGE_PERMISSIONS'],
         principalId=3407544
     )
-    # Append queue mapping
-    append_queue_mapping(syn, main_queue.id, main_queue_test.id)
 
     prof_wf = os.path.join("covid19-challenge-master/infrastructure",
                            f"{question}_workflow.cwl")
@@ -120,6 +118,8 @@ def create_main_bundle(syn: Synapse, question: int):
     print("Add to NCAT's docker-compose .env")
     print({main_queue.id: main_ent.id,
            main_queue_test.id: main_test_ent.id})
+    return {"main_queueid": main_queue.id,
+            "main_queue_testid": main_queue_test.id}
 
 
 def create_site_bundle(syn: Synapse, question: int, site: str):
@@ -158,8 +158,6 @@ def create_site_bundle(syn: Synapse, question: int, site: str):
                     'READ_PRIVATE_SUBMISSION', 'CHANGE_PERMISSIONS'],
         principalId=3407544
     )
-    # Append queue mapping
-    append_queue_mapping(syn, internal.id, internal_test.id)
 
     prod_wf = os.path.join("covid19-challenge-master/infrastructure",
                            f"{question}_internal_workflow.cwl")
@@ -176,6 +174,8 @@ def create_site_bundle(syn: Synapse, question: int, site: str):
     print(f"Add to {site}'s docker-compose .env")
     print({internal.id: ent.id,
            internal_test.id: test_ent.id})
+    return {"internal_queueid": internal.id,
+            "internal_queue_testid": internal_test.id}
 
 
 def cli():
@@ -185,8 +185,6 @@ def cli():
                         help='A question number to add')
     parser.add_argument('--sites', type=str, nargs='+',
                         help="Sites to add")
-    parser.add_argument('--only_internal', action='store_true',
-                        help="Only add site workflow bundles")   
     args = parser.parse_args()
     return args
 
@@ -198,18 +196,21 @@ def main():
     question = args.question
     sites = args.sites
     # Create main workflows + entities
-    if not args.only_internal:
-        create_main_bundle(syn, question)
+    #if not args.only_internal:
+    main = create_main_bundle(syn, question)
     for site in sites:
         # Create site workflows + entities
-        create_site_bundle(syn, question, site)
+        internal = create_site_bundle(syn, question, site)
+        # Append queue mapping
+        append_queue_mapping(syn, main['main_queueid'], internal['internal_queueid'])
+        append_queue_mapping(syn, main['main_queue_testid'], internal['internal_queue_testid'])
+
     print("Make sure you run")
     print(f"git add infrastructure/{question}_workflow.cwl")
     print(f"git add infrastructure/{question}_internal_workflow.cwl")
     # TODO: auto create leaderboard
     print("Add leaderboards")
-    print("Edit get_evaluation_id.cwl")
-    # TODO: Create table with evaluation id mappings
+
 
 if __name__ == "__main__":
     main()
