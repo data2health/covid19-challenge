@@ -21,7 +21,7 @@ requirements:
     listing:
       - entryname: update_status.json
         entry: |
-          {"dataset_name": \"$(inputs.train_name)\",
+          {"dataset_name": \"$(inputs.dataset_name)\",
            "train_dataset_version": \"$(inputs.train_version)\",
            "infer_dataset_version": \"$(inputs.infer_version)\",
            "submission_status": \"EVALUATION_IN_PROGRESS\",
