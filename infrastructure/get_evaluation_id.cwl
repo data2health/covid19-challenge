@@ -45,11 +45,20 @@ requirements:
           syn = synapseclient.Synapse(configPath=args.synapse_config)
           syn.login()
           sub = syn.getSubmission(args.submissionid, downloadLocation=".")
-
+          # Q1 UW
           if sub.evaluationId == "9614453":
             submit_to = "9614494"
-          else:
+          # Q1 UW TEST
+          else if sub.evaluationId == "9614450":
             submit_to = "9614451"
+          # Q2 UW
+          else if sub.evaluationId == "9614502":
+            submit_to = "9614504"
+          # Q2 UW TEST
+          else if sub.evaluationId == "9614450":
+            submit_to = "9614503"
+          else:
+            raise ValueError("Evaluation Id not set")
           result = {'evaluation_id': submit_to}
           with open(args.results, 'w') as o:
             o.write(json.dumps(result))
