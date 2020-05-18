@@ -2,6 +2,7 @@
 import argparse
 import os
 import shutil
+from urllib.parse import quote
 
 import synapseclient
 from synapseclient import Evaluation, File, Synapse
@@ -21,7 +22,13 @@ def create_evaluation_queue(syn: Synapse, name: str) -> Evaluation:
         a synapseclient.Evaluation
     """
     queue = Evaluation(name=name, contentSource="syn21849255")
-    return syn.store(queue)
+    try:
+        queue = syn.store(queue)
+    except Exception:
+        url_name = quote(name)
+        queue = syn.restGET(f"/evaluation/name/{url_name}")
+        queue = Evaluation(**queue)
+    return queue
 
 
 def create_entity(syn: Synapse, name: str, link: str,
