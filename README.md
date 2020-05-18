@@ -1,5 +1,9 @@
 # COVID-19 DREAM Challenge
 
+## Creating Datasets
+
+TODO: Add information about how to create docker volumes linking to local data.
+
 ## Updating Datasets
 Datasets must be put in `docker volumes` and must be named
 
