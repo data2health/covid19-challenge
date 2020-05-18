@@ -64,8 +64,30 @@ def create_main_bundle(syn: Synapse, question: int):
     main_queue = create_evaluation_queue(
         syn, f"COVID-19 DREAM Challenge - Question {question}"
     )
+    # Global view
+    syn.setPermissions(main_queue, accessType=['READ'])
+    # Participant team
+    syn.setPermissions(
+        main_queue, accessType=['READ'], principalId=3407543
+    )
+    # Admin team
+    syn.setPermissions(
+        main_queue,
+        accessType=['DELETE_SUBMISSION', 'DELETE', 'SUBMIT', 'UPDATE',
+                    'CREATE', 'READ', 'UPDATE_SUBMISSION',
+                    'READ_PRIVATE_SUBMISSION', 'CHANGE_PERMISSIONS'],
+        principalId=3407544
+    )
+
     main_queue_test = create_evaluation_queue(
         syn, f"COVID-19 DREAM Challenge - Question {question} TEST"
+    )
+    syn.setPermissions(
+        main_queue_test,
+        accessType=['DELETE_SUBMISSION', 'DELETE', 'SUBMIT', 'UPDATE',
+                    'CREATE', 'READ', 'UPDATE_SUBMISSION',
+                    'READ_PRIVATE_SUBMISSION', 'CHANGE_PERMISSIONS'],
+        principalId=3407544
     )
 
     prof_wf = os.path.join("covid19-challenge-master/infrastructure",
@@ -103,8 +125,22 @@ def create_site_bundle(syn: Synapse, question: int, site: str):
     internal = create_evaluation_queue(
         syn, f"COVID-19 DREAM {site} - Question {question}"
     )
+    syn.setPermissions(
+        internal,
+        accessType=['DELETE_SUBMISSION', 'DELETE', 'SUBMIT', 'UPDATE',
+                    'CREATE', 'READ', 'UPDATE_SUBMISSION',
+                    'READ_PRIVATE_SUBMISSION', 'CHANGE_PERMISSIONS'],
+        principalId=3407544
+    )
     internal_test = create_evaluation_queue(
         syn, f"COVID-19 DREAM {site} - Question {question} TEST"
+    )
+    syn.setPermissions(
+        internal_test,
+        accessType=['DELETE_SUBMISSION', 'DELETE', 'SUBMIT', 'UPDATE',
+                    'CREATE', 'READ', 'UPDATE_SUBMISSION',
+                    'READ_PRIVATE_SUBMISSION', 'CHANGE_PERMISSIONS'],
+        principalId=3407544
     )
 
     prod_wf = os.path.join("covid19-challenge-master/infrastructure",
