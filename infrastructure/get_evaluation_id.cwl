@@ -47,7 +47,7 @@ requirements:
           sub = syn.getSubmission(args.submissionid, downloadLocation=".")
           queue_mapping_table = syn.tableQuery("select * from syn22077175")
           queue_mappingdf = queue_mapping_table.asDataFrame()
-          mapping = {row['main']: row['internal']
+          mapping = {str(row['main']): str(row['internal'])
                      for _, row in queue_mappingdf.iterrows()}
           submit_to = mapping.get(sub.evaluationId)
           if submit_to is None:
