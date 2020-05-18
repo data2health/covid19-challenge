@@ -47,6 +47,19 @@ def create_entity(syn: Synapse, name: str, link: str,
     return syn.store(file_ent)
 
 
+def append_queue_mapping(syn, main_queueid, internal_queueid):
+    """Append to queue mapping if mapping doesn't exist"""
+    queue_mapping_table = syn.tableQuery(
+        f"select * from syn22077175 where main = '{main_queueid}'"
+    )
+    queue_mappingdf = queue_mapping_table.asDataFrame()
+    if queue_mappingdf.empty:
+        table = synapseclient.Table(
+            "syn22077175", [[str(main_queueid), str(internal_queueid)]]
+        )
+        syn.store(table)
+
+
 def create_main_bundle(syn: Synapse, question: int):
     """Creates workflow and entity bundles for the main submission
 
@@ -89,6 +102,8 @@ def create_main_bundle(syn: Synapse, question: int):
                     'READ_PRIVATE_SUBMISSION', 'CHANGE_PERMISSIONS'],
         principalId=3407544
     )
+    # Append queue mapping
+    append_queue_mapping(syn, main_queue.id, main_queue_test.id)
 
     prof_wf = os.path.join("covid19-challenge-master/infrastructure",
                            f"{question}_workflow.cwl")
@@ -135,6 +150,7 @@ def create_site_bundle(syn: Synapse, question: int, site: str):
     internal_test = create_evaluation_queue(
         syn, f"COVID-19 DREAM {site} - Question {question} TEST"
     )
+
     syn.setPermissions(
         internal_test,
         accessType=['DELETE_SUBMISSION', 'DELETE', 'SUBMIT', 'UPDATE',
@@ -142,6 +158,8 @@ def create_site_bundle(syn: Synapse, question: int, site: str):
                     'READ_PRIVATE_SUBMISSION', 'CHANGE_PERMISSIONS'],
         principalId=3407544
     )
+    # Append queue mapping
+    append_queue_mapping(syn, internal.id, internal_test.id)
 
     prod_wf = os.path.join("covid19-challenge-master/infrastructure",
                            f"{question}_internal_workflow.cwl")
