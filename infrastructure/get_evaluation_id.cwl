@@ -45,11 +45,13 @@ requirements:
           syn = synapseclient.Synapse(configPath=args.synapse_config)
           syn.login()
           sub = syn.getSubmission(args.submissionid, downloadLocation=".")
-
-          if sub.evaluationId == "9614453":
-            submit_to = "9614494"
-          else:
-            submit_to = "9614451"
+          queue_mapping_table = syn.tableQuery("select * from syn22077175")
+          queue_mappingdf = queue_mapping_table.asDataFrame()
+          mapping = {str(row['main']): str(row['internal'])
+                     for _, row in queue_mappingdf.iterrows()}
+          submit_to = mapping.get(sub.evaluationId)
+          if submit_to is None:
+            raise ValueError("Evaluation Id not set")
           result = {'evaluation_id': submit_to}
           with open(args.results, 'w') as o:
             o.write(json.dumps(result))
