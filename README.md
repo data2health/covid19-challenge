@@ -2,17 +2,24 @@
 
 ## Creating Datasets
 
-TODO: Add information about how to create docker volumes linking to local data.
-
-## Updating Datasets
-Datasets must be put in `docker volumes` and must be named
+Datasets must be put in `docker volumes` and must be named.
 
 ```
-{train_dataset_name}_{train_dataset_version}
-{infer_dataset_name}_{infer_dataset_version}
+{site}_{data_model}_covid_q{number}_train_{train_dataset_version}
+{site}_{data_model}_covid_q{number}_infer_{infer_dataset_version}
+# Examples
+uw_omop_covid_q1_train_05-06-2020
+uw_omop_covid_q1_infer_05-06-2020
 ```
 
-Once these `docker volumes` are created, please edit `infrastructure/get_site.cwl` to have the correct dataset names and version.
+Here is how you create a docker volume.
+
+```
+docker volume create --driver local --opt type=none --opt device=/path/to/training/data --opt o=bind uw_omop_covid_q1_train_05-06-2020
+docker volume create --driver local --opt type=none --opt device=/path/to/infer/data --opt o=bind uw_omop_covid_q1_infer_05-06-2020
+```
+
+Once these `docker volumes` are created, `infrastructure/get_site.cwl` must be changed to have the correct dataset names and version.
 
 ## Adding Challenge Questions
 Please run `scripts/add_challenge.py`. An example would be
