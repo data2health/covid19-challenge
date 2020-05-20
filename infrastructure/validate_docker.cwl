@@ -132,7 +132,7 @@ requirements:
               f"**References:** {references}\n\n"
               "</details>")
           else:
-            result['detailed_information'] = ''
+            result['detailed_information'] = 'No Details'
           with open(args.results, 'w') as o:
             o.write(json.dumps(result))
 
