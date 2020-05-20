@@ -40,3 +40,9 @@ Make sure you run
 git add infrastructure/2_workflow.cwl
 git add infrastructure/2_internal_workflow.cwl
 ```
+
+## Setting up SynpaseWorkflowOrchestrator
+
+Follow instructions [here](https://github.com/Sage-Bionetworks/SynapseWorkflowOrchestrator) to configure and run the orchestrator.
+
+Each site also needs their own synapse log folder (e.g. UW Submission Logs) due to permissions issue. The EHR Synapse service account creates folders per participant and when a site admin tries to create that same folder, it will fail
