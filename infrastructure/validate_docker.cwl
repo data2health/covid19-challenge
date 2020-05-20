@@ -111,13 +111,22 @@ requirements:
                 invalid_reasons.append("description LABEL can't be empty string")
               if labels['ranked_features'].split(",")[0] == '':
                 invalid_reasons.append("ranked_features LABEL can't be empty string")
+              for label in required_labels:
+                if len(labels[label]) > 500:
+                  invalid_reasons.append(f"{label} LABEL must be smaller than 500 characters")
             else:
               labels = {}
               invalid_reasons.append("Dockerfile must contain these Dockerfile LABELs: {}".format(",".join(required_labels)))
           else:
             invalid_reasons.append("Submission must be a Docker image, not Project/Folder/File. Please visit 'Docker Submission' for more information.")
         
-          status = "INVALID" if invalid_reasons else "EVALUATION_IN_PRORGRESS"
+          # Don't store labels if invalid
+          if invalid_reasons:
+            status = "INVALID"
+            labels = {}
+          else:
+            status = "EVALUATION_IN_PRORGRESS"
+
           result = {'submission_errors':"\n".join(invalid_reasons),
                     'submission_status':status}
           result.update(labels)
@@ -132,7 +141,7 @@ requirements:
               f"**References:** {references}\n\n"
               "</details>")
           else:
-            result['detailed_information'] = ''
+            result['detailed_information'] = 'No Details'
           with open(args.results, 'w') as o:
             o.write(json.dumps(result))
 
