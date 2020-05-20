@@ -111,6 +111,9 @@ requirements:
                 invalid_reasons.append("description LABEL can't be empty string")
               if labels['ranked_features'].split(",")[0] == '':
                 invalid_reasons.append("ranked_features LABEL can't be empty string")
+              for label in required_labels:
+                if len(labels[label]) > 500:
+                  invalid_reasons.append(f"{label} LABEL must be smaller than 500 characters")
             else:
               labels = {}
               invalid_reasons.append("Dockerfile must contain these Dockerfile LABELs: {}".format(",".join(required_labels)))
