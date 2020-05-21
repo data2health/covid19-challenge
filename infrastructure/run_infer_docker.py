@@ -110,7 +110,7 @@ def main(args):
                 try:
                     # syn.store(ent)
                     print("don't store")
-                except synapseclient.exceptions.SynapseHTTPError:
+                except synapseclient.core.exceptions.SynapseHTTPError:
                     pass
                 time.sleep(60)
         # Must run again to make sure all the logs are captured
@@ -129,7 +129,7 @@ def main(args):
             try:
                 # syn.store(ent)
                 print("dont store")
-            except synapseclient.exceptions.SynapseHTTPError:
+            except synapseclient.core.exceptions.SynapseHTTPError:
                 pass
         # Collect runtime
         inspection = api_client.inspect_container(container.name)

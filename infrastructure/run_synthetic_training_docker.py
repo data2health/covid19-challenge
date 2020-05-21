@@ -33,7 +33,7 @@ def store_log_file(syn, log_filename, parentid, test=False):
         if not test:
             try:
                 syn.store(ent)
-            except synapseclient.exceptions.SynapseHTTPError as err:
+            except synapseclient.core.exceptions.SynapseHTTPError as err:
                 print(err)
 
 
