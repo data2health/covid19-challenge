@@ -102,7 +102,7 @@ def main(args):
                 ent = synapseclient.File(log_filename, parent=args.parentid)
                 try:
                     syn.store(ent)
-                except synapseclient.exceptions.SynapseHTTPError:
+                except synapseclient.core.exceptions.SynapseHTTPError:
                     pass
                 time.sleep(60)
         # Must run again to make sure all the logs are captured
@@ -117,7 +117,7 @@ def main(args):
             ent = synapseclient.File(log_filename, parent=args.parentid)
             try:
                 syn.store(ent)
-            except synapseclient.exceptions.SynapseHTTPError:
+            except synapseclient.core.exceptions.SynapseHTTPError:
                 pass
 
         #Remove container and image after being done
@@ -133,7 +133,7 @@ def main(args):
         ent = synapseclient.File(log_filename, parent=args.parentid)
         try:
             syn.store(ent)
-        except synapseclient.exceptions.SynapseHTTPError:
+        except synapseclient.core.exceptions.SynapseHTTPError:
             pass
 
     #Try to remove the image
