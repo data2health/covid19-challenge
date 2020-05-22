@@ -252,7 +252,7 @@ steps:
   #     - id: predictions
 
   upload_results:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/upload-empty-file/upload_to_synapse.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.6/upload_to_synapse.cwl
     in:
       - id: infile
         source: "#run_docker_infer/predictions"
