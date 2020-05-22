@@ -84,7 +84,8 @@ def main(args):
 
     #Create the logfile
     log_filename = args.submissionid + "_infer_log.txt"
-    open(log_filename, 'w').close()
+    with open(log_filename, 'w') as log_file:
+        log_file.write("Infererence starting...")
 
     # If the container doesn't exist, there are no logs to write out and no
     # container to remove
