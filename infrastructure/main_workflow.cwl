@@ -75,7 +75,7 @@ steps:
       - id: filepath
 
   get_docker_submission:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/get_submission.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.6/get_submission.cwl
     in:
       - id: submissionid
         source: "#submissionId"
@@ -87,6 +87,7 @@ steps:
       - id: docker_digest
       - id: entity_id
       - id: entity_type
+      - id: evaluation_id
       - id: results
       
   validate_docker:
