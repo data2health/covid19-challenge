@@ -85,7 +85,8 @@ def main(args):
     #Create the logfile
     log_filename = args.submissionid + "_infer_log.txt"
     with open(log_filename, 'w') as log_file:
-        log_file.write("Infererence starting...")
+        log_file.write("Infererence starting... Please add print statements "
+                       "in your model to receive useful logs!")
 
     # If the container doesn't exist, there are no logs to write out and no
     # container to remove
@@ -130,7 +131,9 @@ def main(args):
             if errors is not None:
                 log_file.write(errors)
             else:
-                log_file.write("No Logs")
+                log_file.write("No Logs were written. Please add print "
+                               "statements in your model to receive useful "
+                               "logs!")
         ent = synapseclient.File(log_filename, parent=args.parentid)
         try:
             syn.store(ent)
