@@ -62,7 +62,7 @@ requirements:
           {"auths": {"$(inputs.docker_registry)": {"auth": "$(inputs.docker_authentication)"}}}
   - class: InlineJavascriptRequirement
   - class: ToolTimeLimit
-    timelimit: 1320
+    timelimit: 900
 
 outputs:
   predictions:
