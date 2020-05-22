@@ -87,7 +87,11 @@ def main(args):
     with open(log_filename, 'w') as log_file:
         log_file.write("Infererence starting... Please add print statements "
                        "in your model to receive useful logs!")
-
+    ent = synapseclient.File(log_filename, parent=args.parentid)
+    try:
+        syn.store(ent)
+    except synapseclient.core.exceptions.SynapseHTTPError:
+        pass
     # If the container doesn't exist, there are no logs to write out and no
     # container to remove
     if container is not None:
