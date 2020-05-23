@@ -175,7 +175,9 @@ steps:
       - id: synapse_config
         source: "#synapseConfig"
       - id: input_dir
-        valueFrom: "/home/thomasyu/train"
+        valueFrom: "synthetic_omop_covid_q1_train_05-15-2020"
+      # valueFrom: "/home/thomasyu/train"
+
       - id: previous
         source: "#check_docker_status/finished"
       - id: docker_script
@@ -211,7 +213,8 @@ steps:
       - id: scratch
         source: "#run_docker_train/scratch"
       - id: input_dir
-        valueFrom: "/home/thomasyu/validation"
+        valueFrom: "synthetic_omop_covid_q1_infer_05-15-2020"
+        # valueFrom: "/home/thomasyu/validation"
       - id: docker_script
         default:
           class: File
