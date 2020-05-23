@@ -13,7 +13,7 @@ hints:
 
 inputs:
   - id: queueid
-    type: int
+    type: string
   - id: synapse_config
     type: File
 
