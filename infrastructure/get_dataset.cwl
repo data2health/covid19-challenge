@@ -59,8 +59,6 @@ requirements:
           dataset_info['submission_status'] = "EVALUATION_IN_PROGRESS"
           dataset_info['train_volume'] = f"{dataset_info['dataset_name']}_train_{dataset_info['train_dataset_version']}"
           dataset_info['infer_volume'] = f"{dataset_info['dataset_name']}_infer_{dataset_info['infer_dataset_version']}"
-          print(dataset_info)
-          raise ValueError("stop")
           with open(args.results, 'w') as o:
             o.write(json.dumps(dataset_info))
 
