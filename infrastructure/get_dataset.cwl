@@ -38,7 +38,7 @@ requirements:
           import json
           import os
           parser = argparse.ArgumentParser()
-          parser.add_argument("-e", "--evaluation_id", required=True, help="Submission ID")
+          parser.add_argument("-e", "--evaluation_id", required=True, help="Queue ID")
           parser.add_argument("-r", "--results", required=True, help="download results info")
           parser.add_argument("-c", "--synapse_config", required=True, help="credentials file")
 
