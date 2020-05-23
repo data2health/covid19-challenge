@@ -69,32 +69,6 @@ steps:
       - id: infer_volume
       - id: results
 
-
-  # get_site_information:
-  #   run: get_site.cwl
-  #   in:
-  #     - id: evaluation_id
-  #       source: "#get_submissionid/evaluation_id"
-  #   out:
-  #     - id: site
-  #     - id: dataset_name
-  #     - id: train_dataset_version
-  #     - id: infer_dataset_version
-
-  # create_internal_dataset_json:
-  #   run: create_internal_dataset_version.cwl
-  #   in:
-  #     - id: dataset_name
-  #       source: "#get_site_information/dataset_name"
-  #     - id: train_version
-  #       source: "#get_site_information/train_dataset_version"
-  #     - id: infer_version
-  #       source: "#get_site_information/infer_dataset_version"
-  #   out:
-  #     - id: json_out
-  #     - id: train_volume
-  #     - id: infer_volume
-
   modify_dataset_annotations:
     run: modify_annotations.cwl
     in:
