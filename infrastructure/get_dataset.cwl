@@ -18,7 +18,7 @@ inputs:
     type: File
 
 arguments:
-  - valueFrom: get_evaluation_id.py
+  - valueFrom: get_dataset.py
   - valueFrom: $(inputs.queueid)
     prefix: -e
   - valueFrom: results.json
@@ -30,7 +30,7 @@ requirements:
   - class: InlineJavascriptRequirement
   - class: InitialWorkDirRequirement
     listing:
-      - entryname: get_evaluation_id.py
+      - entryname: get_dataset.py
         entry: |
           #!/usr/bin/env python
           import synapseclient
@@ -57,8 +57,8 @@ requirements:
 
           dataset_info = dataset_mappingdf.to_dict('records')[0]
           dataset_info['submission_status'] = "EVALUATION_IN_PROGRESS"
-          dataset_info['train_volume'] = f"{}_train_{}"
-          dataset_info['infer_volume'] = f"{}_infer_{}"
+          dataset_info['train_volume'] = f"{dataset_info['dataset_name']}_train_{dataset_info['train_dataset_version']}"
+          dataset_info['infer_volume'] = f"{dataset_info['dataset_name']}_infer_{dataset_info['infer_dataset_version']}"
           with open(args.results, 'w') as o:
             o.write(json.dumps(dataset_info))
 
