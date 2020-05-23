@@ -56,38 +56,52 @@ steps:
       - id: evaluation_id
       - id: results
 
-  get_site_information:
-    run: get_site.cwl
+  get_dataset_info:
+    run: get_dataset.cwl
     in:
-      - id: evaluation_id
+      - id: queueid
         source: "#get_submissionid/evaluation_id"
+      - id: synapse_config
+        source: "#synapseConfig"
     out:
       - id: site
-      - id: dataset_name
-      - id: train_dataset_version
-      - id: infer_dataset_version
-
-  create_internal_dataset_json:
-    run: create_internal_dataset_version.cwl
-    in:
-      - id: dataset_name
-        source: "#get_site_information/dataset_name"
-      - id: train_version
-        source: "#get_site_information/train_dataset_version"
-      - id: infer_version
-        source: "#get_site_information/infer_dataset_version"
-    out:
-      - id: json_out
       - id: train_volume
       - id: infer_volume
+      - id: results
+
+
+  # get_site_information:
+  #   run: get_site.cwl
+  #   in:
+  #     - id: evaluation_id
+  #       source: "#get_submissionid/evaluation_id"
+  #   out:
+  #     - id: site
+  #     - id: dataset_name
+  #     - id: train_dataset_version
+  #     - id: infer_dataset_version
+
+  # create_internal_dataset_json:
+  #   run: create_internal_dataset_version.cwl
+  #   in:
+  #     - id: dataset_name
+  #       source: "#get_site_information/dataset_name"
+  #     - id: train_version
+  #       source: "#get_site_information/train_dataset_version"
+  #     - id: infer_version
+  #       source: "#get_site_information/infer_dataset_version"
+  #   out:
+  #     - id: json_out
+  #     - id: train_volume
+  #     - id: infer_volume
 
   modify_dataset_annotations:
     run: modify_annotations.cwl
     in:
       - id: inputjson
-        source: "#create_internal_dataset_json/json_out"
+        source: "#get_dataset_info/results"
       - id: site
-        source: "#get_site_information/site"
+        source: "#get_dataset_info/site"
     out: [results]
 
   annotate_dataset_version:
@@ -111,7 +125,7 @@ steps:
       - id: submissionid
         source: "#submissionId"
       - id: annotation_values
-        source: "#create_internal_dataset_json/json_out"
+        source: "#get_dataset_info/results"
       - id: to_public
         default: true
       - id: force
@@ -251,7 +265,7 @@ steps:
       #- id: input_dir
       #  valueFrom: "uw_omop_train"
       - id: input_dir
-        source: "#create_internal_dataset_json/train_volume"
+        source: "#get_dataset_info/train_volume"
         # valueFrom: "uw_omop_covid_training"
       - id: docker_script
         default:
@@ -286,7 +300,7 @@ steps:
       - id: scratch
         source: "#run_docker_train/scratch"
       - id: input_dir
-        source: "#create_internal_dataset_json/infer_volume"
+        source: "#get_dataset_info/infer_volume"
         # valueFrom: "uw_omop_covid_05-06-2020"
       - id: stage
         valueFrom: "first"
@@ -338,7 +352,7 @@ steps:
       - id: inputjson
         source: "#validation/results"
       - id: site
-        source: "#get_site_information/site"
+        source: "#get_dataset_info/site"
     out: [results]
 
   annotate_main_submission_with_validation:
@@ -418,7 +432,7 @@ steps:
       - id: inputjson
         source: "#scoring/results"
       - id: site
-        source: "#get_site_information/site"
+        source: "#get_dataset_info/site"
     out: [results]
 
   annotate_main_submission_with_scores:
