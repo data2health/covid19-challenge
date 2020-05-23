@@ -83,7 +83,7 @@ outputs:
     outputBinding:
       glob: results.json
       loadContents: true
-      outputEval: $(JSON.parse(self[0].contents)['train_volume'])
+      outputEval: $(JSON.parse(self[0].contents)['infer_volume'])
 
   - id: results
     type: File
