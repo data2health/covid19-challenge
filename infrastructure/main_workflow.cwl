@@ -89,7 +89,20 @@ steps:
       - id: entity_type
       - id: evaluation_id
       - id: results
-      
+
+  get_dataset_info:
+    run: get_dataset.cwl
+    in:
+      - id: queueid
+        source: "#get_docker_submission/evaluation_id"
+      - id: synapse_config
+        source: "#synapseConfig"
+    out:
+      - id: site
+      - id: train_volume
+      - id: infer_volume
+      - id: results
+
   validate_docker:
     run: validate_docker.cwl
     in:
@@ -175,7 +188,8 @@ steps:
       - id: synapse_config
         source: "#synapseConfig"
       - id: input_dir
-        valueFrom: "synthetic_omop_covid_q1_train_05-15-2020"
+        source: "#get_dataset_info/train_volume"
+      # valueFrom: "synthetic_omop_covid_q1_train_05-15-2020"
       # valueFrom: "/home/thomasyu/train"
 
       - id: previous
@@ -213,7 +227,7 @@ steps:
       - id: scratch
         source: "#run_docker_train/scratch"
       - id: input_dir
-        valueFrom: "synthetic_omop_covid_q1_infer_05-15-2020"
+        source: "#get_dataset_info/infer_volume"
         # valueFrom: "/home/thomasyu/validation"
       - id: docker_script
         default:
@@ -341,8 +355,8 @@ steps:
   get_submit_queue:
     run: get_evaluation_id.cwl
     in:
-      - id: submissionid
-        source: "#submissionId"
+      - id: queueid
+        source: "#get_docker_submission/evaluation_id"
       - id: synapse_config
         source: "#synapseConfig"
     out:
