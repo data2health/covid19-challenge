@@ -108,7 +108,7 @@ def update_status(syn: Synapse, queue_info: pd.Series):
 
 
 def convert_overall_status(syn: Synapse, main_queueid: str, sites: list):
-    """If all internal sites have INVALID errors, make main status REJECTED
+    """If all internal sites have INVALID status, make main status REJECTED
     """
     # Format site query str
     site_status_keys = [f"{site}_submission_status == 'INVALID'"
@@ -136,7 +136,8 @@ def main():
     for main_queueid, queue_df in main_queues:
         evaluation = syn.getEvaluation(main_queueid)
         print(f"Checking '{evaluation.name}'")
-        queue_df.apply(lambda queue_info: update_status(syn, queue_info), axis=1)
+        queue_df.apply(lambda queue_info: update_status(syn, queue_info),
+                       axis=1)
         convert_overall_status(syn, main_queueid, queue_df['site'].unique())
 
 
