@@ -11,7 +11,7 @@ inputs:
   evaluationid: string[] 
   submission_file: string
   synapse_config: File
-  submissionid: string
+  submissionid: int
 
 steps:
   submit:
