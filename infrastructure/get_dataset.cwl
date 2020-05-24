@@ -18,7 +18,7 @@ inputs:
     type: File
 
 arguments:
-  - valueFrom: get_evaluation_id.py
+  - valueFrom: get_dataset.py
   - valueFrom: $(inputs.queueid)
     prefix: -e
   - valueFrom: results.json
@@ -30,7 +30,7 @@ requirements:
   - class: InlineJavascriptRequirement
   - class: InitialWorkDirRequirement
     listing:
-      - entryname: get_evaluation_id.py
+      - entryname: get_dataset.py
         entry: |
           #!/usr/bin/env python
           import synapseclient
@@ -41,27 +41,50 @@ requirements:
           parser.add_argument("-e", "--evaluation_id", required=True, help="Queue ID")
           parser.add_argument("-r", "--results", required=True, help="download results info")
           parser.add_argument("-c", "--synapse_config", required=True, help="credentials file")
+
           args = parser.parse_args()
           syn = synapseclient.Synapse(configPath=args.synapse_config)
           syn.login()
-          queue_mapping_table = syn.tableQuery("select * from syn22077175")
-          queue_mappingdf = queue_mapping_table.asDataFrame()
-          mapping = {str(row['main']): str(row['internal'])
-                     for _, row in queue_mappingdf.iterrows()}
-          submit_to = mapping.get(args.evaluation_id)
-          if submit_to is None:
-            raise ValueError("Evaluation Id not set")
-          result = {'evaluation_id': submit_to}
+          evaluation_id = args.evaluation_id
+          dataset_mapping = syn.tableQuery(
+              f"select * from syn22093564 where queue = '{evaluation_id}'"
+          )
+          dataset_mappingdf = dataset_mapping.asDataFrame()
+          if dataset_mappingdf.empty:
+            raise ValueError("Dataset Mapping is not set")
+          if len(dataset_mappingdf) > 1:
+            raise ValueError("Duplicated 'queue' not allowed")
+
+          dataset_info = dataset_mappingdf.to_dict('records')[0]
+          dataset_info['submission_status'] = "EVALUATION_IN_PROGRESS"
+          dataset_info['train_volume'] = f"{dataset_info['dataset_name']}_train_{dataset_info['train_dataset_version']}"
+          dataset_info['infer_volume'] = f"{dataset_info['dataset_name']}_infer_{dataset_info['infer_dataset_version']}"
           with open(args.results, 'w') as o:
-            o.write(json.dumps(result))
+            o.write(json.dumps(dataset_info))
 
 outputs:
-  - id: evaluation_id
+
+  - id: site
     type: string
     outputBinding:
       glob: results.json
       loadContents: true
-      outputEval: $(JSON.parse(self[0].contents)['evaluation_id'])
+      outputEval: $(JSON.parse(self[0].contents)['site'])
+
+  - id: train_volume
+    type: string
+    outputBinding:
+      glob: results.json
+      loadContents: true
+      outputEval: $(JSON.parse(self[0].contents)['train_volume'])
+
+  - id: infer_volume
+    type: string
+    outputBinding:
+      glob: results.json
+      loadContents: true
+      outputEval: $(JSON.parse(self[0].contents)['infer_volume'])
+
   - id: results
     type: File
     outputBinding:
