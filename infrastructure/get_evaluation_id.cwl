@@ -49,7 +49,7 @@ requirements:
           queue_mappingdf = queue_mapping_table.asDataFrame()
           mapping = defaultdict(list)
           for _, row in queue_mappingdf.iterrows():
-            mapping[str(row['main'])].append(str(row['internal'])
+            mapping[str(row['main'])].append(str(row['internal']))
 
           # mapping = {str(row['main']): str(row['internal'])
           #            for _, row in queue_mappingdf.iterrows()}
