@@ -12,6 +12,7 @@ class: Workflow
 
 requirements:
   - class: StepInputExpressionRequirement
+  - class: SubworkflowFeatureRequirement
 
 inputs:
   - id: submissionId
