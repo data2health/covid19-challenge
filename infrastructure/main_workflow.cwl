@@ -75,7 +75,7 @@ steps:
       - id: filepath
 
   get_docker_submission:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/get_submission.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.6/get_submission.cwl
     in:
       - id: submissionid
         source: "#submissionId"
@@ -87,8 +87,22 @@ steps:
       - id: docker_digest
       - id: entity_id
       - id: entity_type
+      - id: evaluation_id
       - id: results
-      
+
+  get_dataset_info:
+    run: get_dataset.cwl
+    in:
+      - id: queueid
+        source: "#get_docker_submission/evaluation_id"
+      - id: synapse_config
+        source: "#synapseConfig"
+    out:
+      - id: site
+      - id: train_volume
+      - id: infer_volume
+      - id: results
+
   validate_docker:
     run: validate_docker.cwl
     in:
@@ -174,7 +188,10 @@ steps:
       - id: synapse_config
         source: "#synapseConfig"
       - id: input_dir
-        valueFrom: "/home/thomasyu/train"
+        source: "#get_dataset_info/train_volume"
+      # valueFrom: "synthetic_omop_covid_q1_train_05-15-2020"
+      # valueFrom: "/home/thomasyu/train"
+
       - id: previous
         source: "#check_docker_status/finished"
       - id: docker_script
@@ -210,7 +227,8 @@ steps:
       - id: scratch
         source: "#run_docker_train/scratch"
       - id: input_dir
-        valueFrom: "/home/thomasyu/validation"
+        source: "#get_dataset_info/infer_volume"
+        # valueFrom: "/home/thomasyu/validation"
       - id: docker_script
         default:
           class: File
@@ -252,7 +270,7 @@ steps:
   #     - id: predictions
 
   upload_results:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/upload-empty-file/upload_to_synapse.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.6/upload_to_synapse.cwl
     in:
       - id: infile
         source: "#run_docker_infer/predictions"
@@ -337,8 +355,8 @@ steps:
   get_submit_queue:
     run: get_evaluation_id.cwl
     in:
-      - id: submissionid
-        source: "#submissionId"
+      - id: queueid
+        source: "#get_docker_submission/evaluation_id"
       - id: synapse_config
         source: "#synapseConfig"
     out:

@@ -2,7 +2,7 @@
 #
 # Run Docker Submission
 #
-cwlVersion: v1.0
+cwlVersion: v1.1
 class: CommandLineTool
 baseCommand: python
 
@@ -65,6 +65,8 @@ requirements:
         entry: |
           {"auths": {"$(inputs.docker_registry)": {"auth": "$(inputs.docker_authentication)"}}}
   - class: InlineJavascriptRequirement
+  - class: ToolTimeLimit
+    timelimit: 1200
 
 outputs:
   predictions:
