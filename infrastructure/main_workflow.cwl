@@ -385,19 +385,34 @@ steps:
         source: "#check_status/finished"
     out: [submission_out]
 
+  upload_submission_file:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.6/upload_to_synapse.cwl
+    in:
+      - id: infile
+        source: "#create_submission_file/submission_out"
+      - id: parentid
+        source: "#adminUploadSynId"
+      - id: used_entity
+        source: "#get_docker_submission/entity_id"
+      - id: executed_entity
+        source: "#workflowSynapseId"
+      - id: synapse_config
+        source: "#synapseConfig"
+    out:
+      - id: uploaded_fileid
+      - id: uploaded_file_version
+      - id: results
 
   submit_to_challenge:
     run: submit_to_challenge.cwl
     scatter: evaluationid
     in:
       - id: submission_file
-        source: "#create_submission_file/submission_out"
+        source: "#upload_submission_file/uploaded_fileid"
       - id: submissionid
         source: "#submissionId"
       - id: synapse_config
         source: "#synapseConfig"
-      - id: parentid
-        source: "#submitterUploadSynId"
       - id: evaluationid
         source: "#get_submit_queue/evaluation_id"
     out: []

@@ -12,13 +12,11 @@ hints:
 
 inputs:
   - id: submission_file
-    type: File
+    type: string
   - id: submissionid
     type: int
   - id: synapse_config
     type: File
-  - id: parentid
-    type: string
   - id: evaluationid
     type: string
 
@@ -28,15 +26,12 @@ arguments:
   - valueFrom: submit
   - valueFrom: $(inputs.evaluationid)
     prefix: --evalID
-  - valueFrom: $(inputs.parentid)
-    prefix: --parentId
-  - valueFrom: $(inputs.submission_file.path)
-    prefix: -f
+  - valueFrom: $(inputs.submission_file)
+    prefix: --id
   - valueFrom: $(inputs.submissionid)
     prefix: --name
 
 requirements:
   - class: InlineJavascriptRequirement
-
 
 outputs: []
