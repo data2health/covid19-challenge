@@ -385,12 +385,13 @@ steps:
         source: "#check_status/finished"
     out: [submission_out]
 
+
   submit_to_challenge:
     run: submit_to_challenge.cwl
     scatter: evaluationid
     in:
-      - id: status
-        source: "#validation/status"
+      - id: submission_file
+        source: "#create_submission_file/submission_out"
       - id: submissionid
         source: "#submissionId"
       - id: synapse_config
@@ -399,10 +400,8 @@ steps:
         source: "#submitterUploadSynId"
       - id: evaluationid
         source: "#get_submit_queue/evaluation_id"
-      # Just needs to be a previous boolean step
-      - id: previous_annotation_finished
-        source: "#check_status/finished"
-    out: [json_out]
+    out: []
+
   # No need to annotate with this.
   # annotate_status:
   #   run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
