@@ -19,7 +19,7 @@ docker volume create --driver local --opt type=none --opt device=/path/to/traini
 docker volume create --driver local --opt type=none --opt device=/path/to/infer/data --opt o=bind uw_omop_covid_q1_infer_05-06-2020
 ```
 
-Once these `docker volumes` are created, `infrastructure/get_site.cwl` must be changed to have the correct dataset names and version.
+Once these `docker volumes` are created, this the [Dataset Mapping](https://www.synapse.org/#!Synapse:syn22093564) Synapse Table must be changed to have the correct dataset names and version.
 
 ## Adding Challenge Questions
 Please run `scripts/add_challenge.py`. An example would be
