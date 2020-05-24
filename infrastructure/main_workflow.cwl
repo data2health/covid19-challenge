@@ -353,6 +353,17 @@ steps:
         source: "#synapseConfig"
     out: [finished]
 
+  check_status:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/check_status.cwl
+    in:
+      - id: status
+        source: "#validation/status"
+      - id: previous_annotation_finished
+        source: "#annotate_validation_with_output/finished"
+      - id: previous_email_finished
+        source: "#validation_email/finished"
+    out: [finished]
+
   get_submit_queue:
     run: get_evaluation_id.cwl
     in:
@@ -364,14 +375,22 @@ steps:
       - id: results
       - id: evaluation_id
 
+  create_submission_file:
+    run: create_submission_file.cwl
+    in:
+      - id: submissionid
+        source: "#submissionId"
+      # Just needs to be a previous boolean step
+      - id: previous
+        source: "#check_status/finished"
+    out: [submission_out]
+
   submit_to_challenge:
     run: submit_to_challenge.cwl
     scatter: evaluationid
     in:
-    # change back to the commented ones for real submissions
       - id: status
         source: "#validation/status"
-        # source: "#validate_docker/status"
       - id: submissionid
         source: "#submissionId"
       - id: synapse_config
@@ -380,34 +399,24 @@ steps:
         source: "#submitterUploadSynId"
       - id: evaluationid
         source: "#get_submit_queue/evaluation_id"
+      # Just needs to be a previous boolean step
       - id: previous_annotation_finished
-        source: "#annotate_validation_with_output/finished"
-        # source: "#annotate_docker_validation_with_output/finished"
+        source: "#check_status/finished"
     out: [json_out]
+  # No need to annotate with this.
+  # annotate_status:
+  #   run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
+  #   scatter: annotation_values
+  #   in:
+  #     - id: submissionid
+  #       source: "#submissionId"
+  #     - id: annotation_values
+  #       source: "#submit_to_challenge/json_out"
+  #     - id: to_public
+  #       default: true
+  #     - id: force
+  #       default: true
+  #     - id: synapse_config
+  #       source: "#synapseConfig"
+  #   out: [finished]
 
-  annotate_status:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
-    scatter: annotation_values
-    in:
-      - id: submissionid
-        source: "#submissionId"
-      - id: annotation_values
-        source: "#submit_to_challenge/json_out"
-      - id: to_public
-        default: true
-      - id: force
-        default: true
-      - id: synapse_config
-        source: "#synapseConfig"
-    out: [finished]
-
-  check_status:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/check_status.cwl
-    in:
-      - id: status
-        source: "#validation/status"
-      - id: previous_annotation_finished
-        source: "#annotate_validation_with_output/finished"
-      - id: previous_email_finished
-        source: "#validation_email/finished"
-    out: [finished]
