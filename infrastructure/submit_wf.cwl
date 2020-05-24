@@ -8,7 +8,7 @@ requirements:
   ScatterFeatureRequirement: {}
 
 inputs:
-  evaluationid: string[] 
+  evaluationid: string
   submission_file: string
   synapse_config: File
   submissionid: int
