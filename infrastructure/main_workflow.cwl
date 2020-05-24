@@ -365,6 +365,7 @@ steps:
 
   submit_to_challenge:
     run: submit_to_challenge.cwl
+    scatter: evaluationid
     in:
     # change back to the commented ones for real submissions
       - id: status
@@ -385,6 +386,7 @@ steps:
 
   annotate_status:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
+    scatter: annotation_values
     in:
       - id: submissionid
         source: "#submissionId"
