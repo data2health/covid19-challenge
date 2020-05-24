@@ -13,6 +13,7 @@ class: Workflow
 requirements:
   - class: StepInputExpressionRequirement
   - class: SubworkflowFeatureRequirement
+  - class: ScatterFeatureRequirement
 
 inputs:
   - id: submissionId
@@ -405,6 +406,7 @@ steps:
 
   submit_to_challenge:
     run: submit_wf.cwl
+    scatter: evaluationid
     in:
       - id: submission_file
         source: "#upload_submission_file/uploaded_fileid"

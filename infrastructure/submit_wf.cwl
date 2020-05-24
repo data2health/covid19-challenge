@@ -16,7 +16,6 @@ inputs:
 steps:
   submit:
     run: submit_to_challenge.cwl
-    scatter: evaluationid
     in:
       submission_file: submission_file
       submissionid: submissionid
