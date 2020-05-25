@@ -30,7 +30,7 @@ inputs:
       position: 0
 
   - id: evaluationid
-    type: string
+    type: string[]
     inputBinding:
       prefix: -e
       itemSeparator: " "
