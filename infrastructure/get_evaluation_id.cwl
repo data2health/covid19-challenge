@@ -50,9 +50,6 @@ requirements:
           mapping = defaultdict(list)
           for _, row in queue_mappingdf.iterrows():
             mapping[str(row['main'])].append(str(row['internal']))
-
-          # mapping = {str(row['main']): str(row['internal'])
-          #            for _, row in queue_mappingdf.iterrows()}
           submit_to = mapping.get(args.evaluation_id)
           if submit_to is None:
             raise ValueError("Evaluation Id not set")
