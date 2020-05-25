@@ -33,7 +33,6 @@ inputs:
     type: string[]
     inputBinding:
       prefix: -e
-      itemSeparator: " "
       position: 3
 
 requirements:
