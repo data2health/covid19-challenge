@@ -406,8 +406,6 @@ steps:
 
   submit_to_challenge:
     run: submit_to_challenge.cwl
-    scatter: [evaluationid]
-    scatterMethod: dotproduct
     in:
       - id: submission_file
         source: "#upload_submission_file/uploaded_fileid"
