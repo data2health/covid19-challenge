@@ -4,9 +4,6 @@
 cwlVersion: v1.0
 class: Workflow
 
-requirements:
-  ScatterFeatureRequirement: {}
-
 inputs:
   evaluationid: string
   submission_file: string
