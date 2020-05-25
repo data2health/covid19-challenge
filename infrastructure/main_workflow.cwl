@@ -12,7 +12,6 @@ class: Workflow
 
 requirements:
   - class: StepInputExpressionRequirement
-  - class: SubworkflowFeatureRequirement
   - class: ScatterFeatureRequirement
 
 inputs:
@@ -389,6 +388,7 @@ steps:
 
   submit_to_challenge:
     run: submit_to_challenge.cwl
+    scatter: evaluationid
     in:
       - id: submission_file
         source: "#create_submission_file/submission_out"
@@ -396,8 +396,6 @@ steps:
         source: "#submissionId"
       - id: synapse_config
         source: "#synapseConfig"
-      - id: parentid
-        source: "#submitterUploadSynId"
       - id: evaluationid
         source: "#get_submit_queue/evaluation_id"
     out: []
