@@ -47,7 +47,8 @@ def create_entity(syn: Synapse, name: str, link: str,
     return syn.store(file_ent)
 
 
-def append_queue_mapping(syn, main_queueid, internal_queueid):
+def append_queue_mapping(syn: Synapse, main_queueid: str,
+                         internal_queueid: str, site: str):
     """Append to queue mapping if mapping doesn't exist"""
     queue_mapping_table = syn.tableQuery(
         f"select * from syn22077175 where main = '{main_queueid}'"
@@ -55,7 +56,7 @@ def append_queue_mapping(syn, main_queueid, internal_queueid):
     queue_mappingdf = queue_mapping_table.asDataFrame()
     if queue_mappingdf.empty:
         table = synapseclient.Table(
-            "syn22077175", [[str(main_queueid), str(internal_queueid)]]
+            "syn22077175", [[str(main_queueid), str(internal_queueid), site]]
         )
         syn.store(table)
 
@@ -67,12 +68,12 @@ def create_main_bundle(syn: Synapse, question: int):
         syn: Synapse connection
         question: Question number
     """
-    shutil.copyfile(
-        os.path.join(SCRIPT_DIR,
-                     "../infrastructure/main_workflow.cwl"),
-        os.path.join(SCRIPT_DIR,
-                     f"../infrastructure/{question}_workflow.cwl")
-    )
+    # shutil.copyfile(
+    #     os.path.join(SCRIPT_DIR,
+    #                  "../infrastructure/main_workflow.cwl"),
+    #     os.path.join(SCRIPT_DIR,
+    #                  f"../infrastructure/{question}_workflow.cwl")
+    # )
 
     main_queue = create_evaluation_queue(
         syn, f"COVID-19 DREAM Challenge - Question {question}"
@@ -103,21 +104,19 @@ def create_main_bundle(syn: Synapse, question: int):
         principalId=3407544
     )
 
-    prof_wf = os.path.join("covid19-challenge-master/infrastructure",
-                           f"{question}_workflow.cwl")
-    test_wf = os.path.join("covid19-challenge-develop/infrastructure",
-                           f"{question}_workflow.cwl")
+    # wf_path = os.path.join("covid19-challenge-master/infrastructure",
+    #                        f"{question}_workflow.cwl")
 
-    main_ent = create_entity(syn, name=f"COVID-19 Q{question}",
-                             link=MASTER,
-                             annotations={'ROOT_TEMPLATE': prof_wf})
-    main_test_ent = create_entity(syn, name=f"COVID-19 Q{question} TEST",
-                                  link=DEV,
-                                  annotations={'ROOT_TEMPLATE': test_wf})
+    # main_ent = create_entity(syn, name=f"COVID-19 Q{question}",
+    #                          link=MASTER,
+    #                          annotations={'ROOT_TEMPLATE': wf_path})
+    # main_test_ent = create_entity(syn, name=f"COVID-19 Q{question} TEST",
+    #                               link=DEV,
+    #                               annotations={'ROOT_TEMPLATE': wf_path})
 
     print("Add to NCAT's docker-compose .env")
-    print({main_queue.id: main_ent.id,
-           main_queue_test.id: main_test_ent.id})
+    print({main_queue.id: "syn21897228",
+           main_queue_test.id: "syn21897227"})
     return {"main_queueid": main_queue.id,
             "main_queue_testid": main_queue_test.id}
 
@@ -130,12 +129,12 @@ def create_site_bundle(syn: Synapse, question: int, site: str):
         question: Question number
         site: Site
     """
-    shutil.copyfile(
-        os.path.join(SCRIPT_DIR,
-                     "../infrastructure/internal_workflow.cwl"),
-        os.path.join(SCRIPT_DIR,
-                     f"../infrastructure/{question}_internal_workflow.cwl")
-    )
+    # shutil.copyfile(
+    #     os.path.join(SCRIPT_DIR,
+    #                  "../infrastructure/internal_workflow.cwl"),
+    #     os.path.join(SCRIPT_DIR,
+    #                  f"../infrastructure/{question}_internal_workflow.cwl")
+    # )
 
     internal = create_evaluation_queue(
         syn, f"COVID-19 DREAM {site} - Question {question}"
@@ -159,23 +158,37 @@ def create_site_bundle(syn: Synapse, question: int, site: str):
         principalId=3407544
     )
 
-    prod_wf = os.path.join("covid19-challenge-master/infrastructure",
-                           f"{question}_internal_workflow.cwl")
-    test_wf = os.path.join("covid19-challenge-develop/infrastructure",
-                           f"{question}_internal_workflow.cwl")
+    # wf_path = os.path.join("covid19-challenge-master/infrastructure",
+    #                        f"{question}_internal_workflow.cwl")
 
-    ent = create_entity(syn, name=f"COVID-19 {site} Q{question}",
-                        link=MASTER,
-                        annotations={'ROOT_TEMPLATE': prod_wf})
-    test_ent = create_entity(syn, name=f"COVID-19 {site} Q{question} TEST",
-                             link=DEV,
-                             annotations={'ROOT_TEMPLATE': test_wf})
+    # ent = create_entity(syn, name=f"COVID-19 {site} Q{question}",
+    #                     link=MASTER,
+    #                     annotations={'ROOT_TEMPLATE': wf_path})
+    # test_ent = create_entity(syn, name=f"COVID-19 {site} Q{question} TEST",
+    #                          link=DEV,
+    #                          annotations={'ROOT_TEMPLATE': wf_path})
 
+    # Currently hardcoded, but will have to create new site entities
+    # Also will have to possibly deal with different run times which will
+    # be different workflows.
     print(f"Add to {site}'s docker-compose .env")
-    print({internal.id: ent.id,
-           internal_test.id: test_ent.id})
+    print({internal.id: "syn21897230",
+           internal_test.id: "syn21897229"})
     return {"internal_queueid": internal.id,
             "internal_queue_testid": internal_test.id}
+
+
+def append_dataset_mapping(syn: Synapse, queue: str, site: str):
+    """Append to dataset mapping if mapping doesn't exist"""
+    queue_mapping_table = syn.tableQuery(
+        f"select * from syn22093564 where queue = '{queue}'"
+    )
+    queue_mappingdf = queue_mapping_table.asDataFrame()
+    if queue_mappingdf.empty:
+        table = synapseclient.Table(
+            "syn22093564", [[str(queue), site, '', '', '']]
+        )
+        syn.store(table)
 
 
 def cli():
@@ -197,17 +210,24 @@ def main():
     sites = args.sites
     # Create main workflows + entities
     #if not args.only_internal:
-    main = create_main_bundle(syn, question)
+    main_queue = create_main_bundle(syn, question)
+    append_dataset_mapping(syn, main_queue['main_queueid'], "NCATS")
+    append_dataset_mapping(syn, main_queue['main_queue_testid'], "NCATS")
+
     for site in sites:
         # Create site workflows + entities
         internal = create_site_bundle(syn, question, site)
         # Append queue mapping
-        append_queue_mapping(syn, main['main_queueid'], internal['internal_queueid'])
-        append_queue_mapping(syn, main['main_queue_testid'], internal['internal_queue_testid'])
+        append_queue_mapping(syn, main_queue['main_queueid'],
+                             internal['internal_queueid'], site)
+        append_queue_mapping(syn, main_queue['main_queue_testid'],
+                             internal['internal_queue_testid'], site)
+        # Append dataset mapping
+        append_dataset_mapping(syn, internal['internal_queueid'], site)
+        append_dataset_mapping(syn, internal['internal_queue_testid'], site)
 
-    print("Make sure you run")
-    print(f"git add infrastructure/{question}_workflow.cwl")
-    print(f"git add infrastructure/{question}_internal_workflow.cwl")
+
+    print("Update table: syn22093564 with dataset version and name")
     # TODO: auto create leaderboard
     print("Add leaderboards")
 
