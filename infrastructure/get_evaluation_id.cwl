@@ -33,6 +33,7 @@ requirements:
       - entryname: get_evaluation_id.py
         entry: |
           #!/usr/bin/env python
+          from collections import defaultdict
           import synapseclient
           import argparse
           import json
@@ -46,8 +47,9 @@ requirements:
           syn.login()
           queue_mapping_table = syn.tableQuery("select * from syn22077175")
           queue_mappingdf = queue_mapping_table.asDataFrame()
-          mapping = {str(row['main']): str(row['internal'])
-                     for _, row in queue_mappingdf.iterrows()}
+          mapping = defaultdict(list)
+          for _, row in queue_mappingdf.iterrows():
+            mapping[str(row['main'])].append(str(row['internal']))
           submit_to = mapping.get(args.evaluation_id)
           if submit_to is None:
             raise ValueError("Evaluation Id not set")
@@ -57,7 +59,7 @@ requirements:
 
 outputs:
   - id: evaluation_id
-    type: string
+    type: string[]
     outputBinding:
       glob: results.json
       loadContents: true
