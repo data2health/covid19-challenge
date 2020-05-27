@@ -117,6 +117,7 @@ steps:
       - id: results
       - id: status
       - id: invalid_reasons
+      - id: enable_training
 
   annotate_docker_validation_with_output:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
