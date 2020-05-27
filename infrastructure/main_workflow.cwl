@@ -190,8 +190,6 @@ steps:
         source: "#synapseConfig"
       - id: input_dir
         source: "#get_dataset_info/train_volume"
-      - id: previous
-        source: "#check_docker_status/finished"
       - id: docker_script
         default:
           class: File
