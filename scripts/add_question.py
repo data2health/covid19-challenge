@@ -238,6 +238,37 @@ def add_dashboard_leaderboard(syn: Synapse, question: int, queue: str):
     )
 
 
+def add_internal_live_leaderboard(syn: Synapse, question: int, sites: list,
+                                  queue: str):
+    """Adding live leaderboard"""
+    live_md_path = os.path.join(SCRIPT_DIR, "live.md")
+    all_text = ''
+    for site in sites:
+        with open(live_md_path, "r")  as live_f:
+            markdown_text = live_f.read()
+            markdown_text = markdown_text.replace("INTERNAL", site)
+            markdown_text = markdown_text.replace("QUEUEID", queue)
+            markdown_text = markdown_text.replace("NUM", question)
+        all_text += markdown_text
+    live_wiki = synapseclient.Wiki(title=f"Internal Q{question} Live Results",
+                                   markdown=all_text,
+                                   owner="syn21849256",
+                                   parentWikiId="601940")
+    wiki = syn.store(live_wiki)
+    print(
+        "ACTION ITEM-"
+        f"Revise https://www.synapse.org/#!Synapse:syn21849256/wiki/{wiki.id}"
+    )
+
+
+def add_internal_expert_leaderboard():
+    pass
+
+
+def add_internal_test_leaderboard():
+    pass
+
+
 def cli():
     """Command line interface"""
     parser = argparse.ArgumentParser(description='Process some integers.')
@@ -274,9 +305,23 @@ def main():
         append_dataset_mapping(syn, internal['internal_queue_testid'], site)
 
     print("ACTION ITEM-Update table syn22093564 with dataset version/name")
-    # TODO: auto create leaderboard
+    print(
+        "ACTION ITEM-Update Results"
+        "https://www.synapse.org/#!Synapse:syn21849256/wiki/601940"
+    )
     add_results_leaderboard(syn, question, sites, main_queue['main_queueid'])
+    print(
+        "ACTION ITEM-Update Submission Dashboards"
+        "https://www.synapse.org/#!Synapse:syn21849256/wiki/601879"
+    )
     add_dashboard_leaderboard(syn, question, main_queue['main_queueid'])
+    print(
+        "ACTION ITEM-Update Internal Leaderboard"
+        "https://www.synapse.org/#!Synapse:syn21849256/wiki/601940"
+    )
+    add_internal_live_leaderboard(syn, question, sites,
+                                  main_queue['main_queueid'])
+
 
 if __name__ == "__main__":
     main()
