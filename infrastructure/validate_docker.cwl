@@ -96,7 +96,6 @@ requirements:
             docker_size = sum([layer['size'] for layer in resp.json()['layers']])
             if docker_size/1000000000.0 >= 1000:
               invalid_reasons.append("Docker container must be less than a teribyte")
-            
 
             blob_request_url = '{0}/v2/{1}/blobs/{2}'.format(index_endpoint, docker_repo, resp.json()['config']['digest'])
             blob_resp = requests.get(blob_request_url, headers={'Authorization': 'Bearer %s' % token})
@@ -126,12 +125,14 @@ requirements:
             labels = {}
           else:
             status = "EVALUATION_IN_PRORGRESS"
+
           training = labels.get("enable_training")
           if training is not None:
             if training not in [True, False]:
               invalid_reasons.append("If you specify enable_training, it must be true or false.")
           else:
             labels['enable_training'] = False
+
           result = {'submission_errors':"\n".join(invalid_reasons),
                     'submission_status':status}
           result.update(labels)
