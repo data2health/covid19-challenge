@@ -54,7 +54,7 @@ requirements:
             raise ValueError("Dataset Mapping is not set")
           if len(dataset_mappingdf) > 1:
             raise ValueError("Duplicated 'queue' not allowed")
-
+          dataset_mappingdf = dataset_mappingdf.fillna('')
           dataset_info = dataset_mappingdf.to_dict('records')[0]
           dataset_info['submission_status'] = "EVALUATION_IN_PROGRESS"
           dataset_info['train_volume'] = f"{dataset_info['dataset_name']}_train_{dataset_info['train_dataset_version']}"
