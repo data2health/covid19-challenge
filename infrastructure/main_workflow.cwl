@@ -117,6 +117,7 @@ steps:
       - id: results
       - id: status
       - id: invalid_reasons
+      - id: enable_training
 
   annotate_docker_validation_with_output:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
@@ -184,6 +185,8 @@ steps:
         source: "#get_docker_config/docker_authentication"
       - id: previous
         source: "#check_docker_status/finished"
+      - id: training
+        source: "#validate_docker/enable_training"
       - id: parentid
         source: "#submitterUploadSynId"
       - id: synapse_config
