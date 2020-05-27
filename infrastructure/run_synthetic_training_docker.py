@@ -160,6 +160,8 @@ def main(syn, args):
         remove_docker_image(docker_image)
     else:
         print("No training")
+        os.mkdir(model_dir)
+        os.mkdir(scratch_dir)
         model_fill = os.path.join(model_dir, "model_fill.txt")
         open(model_fill, 'w').close()
 
