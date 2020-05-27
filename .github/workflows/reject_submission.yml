@@ -3,7 +3,9 @@
 
 name: reject_submission
 
-on: [push]
+on:
+  schedule:
+    - cron: '*/30 * * * *'
 
 jobs:
   reject:
