@@ -1,13 +1,14 @@
 """
 Reject submissions that are invalid in UW queue but valid in synthetic queue
 """
+import argparse
+
+from challengeutils.utils import (evaluation_queue_query,
+                                  update_single_submission_status)
 import pandas as pd
 import synapseclient
 from synapseclient.core.retry import with_retry
 from synapseclient import Synapse
-
-from challengeutils.utils import (evaluation_queue_query,
-                                  update_single_submission_status)
 
 
 def get_queue_mapping(syn):
@@ -129,7 +130,14 @@ def convert_overall_status(syn: Synapse, main_queueid: str, sites: list):
 
 def main():
     """Invoke REJECTION"""
-    syn = synapseclient.login()
+    parser = argparse.ArgumentParser(description='Reject Submissions')
+    parser.add_argument('--username', type=str,
+                        help='Synapse Username')
+    parser.add_argument('--password', type=str,
+                        help="Synapse Password")
+    args = parser.parse_args()
+    syn = synapseclient.Synapse()
+    syn.login(email=args.username, password=args.password)
     queue_mappingdf = get_queue_mapping(syn)
     # Group by main queues, because a main queue can be attached
     # to more than one internal queue
