@@ -128,8 +128,10 @@ requirements:
 
           training = labels.get("enable_training")
           if training is not None:
-            if training not in [True, False]:
-              invalid_reasons.append("If you specify enable_training, it must be true or false.")
+            if training.upper() not in ["TRUE", "FALSE"]:
+              invalid_reasons.append("If you specify enable_training, it must be 'true' or 'false'.")
+            else:
+              labels['enable_training'] = training.upper() == "TRUE"
           else:
             labels['enable_training'] = False
 
