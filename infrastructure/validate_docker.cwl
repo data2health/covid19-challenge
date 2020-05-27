@@ -114,6 +114,12 @@ requirements:
               for label in required_labels:
                 if len(labels[label]) > 500:
                   invalid_reasons.append(f"{label} LABEL must be smaller than 500 characters")
+              training = labels.get("enable_training")
+              if training is not None:
+                if training not in [True, False]:
+                  invalid_reasons.append("If you specify enable_training, it must be true or false.")
+              else:
+                labels['enable_training'] = False
             else:
               labels = {}
               invalid_reasons.append("Dockerfile must contain these Dockerfile LABELs: {}".format(",".join(required_labels)))
@@ -165,3 +171,10 @@ outputs:
       glob: results.json
       loadContents: true
       outputEval: $(JSON.parse(self[0].contents)['submission_errors'])
+
+  - id: enable_training
+    type: boolean
+    outputBinding:
+      glob: results.json
+      loadContents: true
+      outputEval: $(JSON.parse(self[0].contents)['enable_training'])
