@@ -19,8 +19,6 @@ inputs:
     type: string
   - id: parentid
     type: string
-  - id: status
-    type: string
   - id: synapse_config
     type: File
   - id: input_dir

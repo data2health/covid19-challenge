@@ -182,8 +182,6 @@ steps:
         source: "#get_docker_config/docker_registry"
       - id: docker_authentication
         source: "#get_docker_config/docker_authentication"
-      - id: previous
-        source: "#check_docker_status/finished"
       - id: parentid
         source: "#submitterUploadSynId"
       - id: synapse_config
