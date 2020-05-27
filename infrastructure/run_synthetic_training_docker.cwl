@@ -27,6 +27,8 @@ inputs:
     type: string
   - id: docker_script
     type: File
+  - id: training
+    type: boolean
 
 arguments: 
   - valueFrom: $(inputs.docker_script.path)
@@ -36,8 +38,8 @@ arguments:
     prefix: -p
   - valueFrom: $(inputs.docker_digest)
     prefix: -d
-  # - valueFrom: $(inputs.status)
-  #   prefix: --status
+  - valueFrom: $(inputs.training)
+    prefix: --training
   - valueFrom: $(inputs.parentid)
     prefix: --parentid
   - valueFrom: $(inputs.synapse_config.path)
