@@ -188,9 +188,6 @@ steps:
         source: "#synapseConfig"
       - id: input_dir
         source: "#get_dataset_info/train_volume"
-      # valueFrom: "synthetic_omop_covid_q1_train_05-15-2020"
-      # valueFrom: "/home/thomasyu/train"
-
       - id: previous
         source: "#check_docker_status/finished"
       - id: docker_script
