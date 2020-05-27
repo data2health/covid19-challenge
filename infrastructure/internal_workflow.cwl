@@ -157,36 +157,36 @@ steps:
         source: "#synapseConfig"
     out: [finished]
 
-  validate_docker:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/validate_docker.cwl
-    in:
-      - id: docker_repository
-        source: "#get_docker_submission/docker_repository"
-      - id: docker_digest
-        source: "#get_docker_submission/docker_digest"
-      - id: synapse_config
-        source: "#synapseConfig"
-    out:
-      - id: results
-      - id: status
-      - id: invalid_reasons
+  # validate_docker:
+  #   run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/validate_docker.cwl
+  #   in:
+  #     - id: docker_repository
+  #       source: "#get_docker_submission/docker_repository"
+  #     - id: docker_digest
+  #       source: "#get_docker_submission/docker_digest"
+  #     - id: synapse_config
+  #       source: "#synapseConfig"
+  #   out:
+  #     - id: results
+  #     - id: status
+  #     - id: invalid_reasons
 
-  annotate_docker_validation_with_output:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
-    in:
-      - id: submissionid
-        source: "#submissionId"
-      - id: annotation_values
-        source: "#validate_docker/results"
-      - id: to_public
-        default: true
-      - id: force
-        default: true
-      - id: synapse_config
-        source: "#synapseConfig"
-      - id: previous_annotation_finished
-        source: "#annotate_submission_main_userid/finished"
-    out: [finished]
+  # annotate_docker_validation_with_output:
+  #   run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
+  #   in:
+  #     - id: submissionid
+  #       source: "#submissionId"
+  #     - id: annotation_values
+  #       source: "#validate_docker/results"
+  #     - id: to_public
+  #       default: true
+  #     - id: force
+  #       default: true
+  #     - id: synapse_config
+  #       source: "#synapseConfig"
+  #     - id: previous_annotation_finished
+  #       source: "#annotate_submission_main_userid/finished"
+  #   out: [finished]
 
   # just used for local testing
   # run_docker_infer:
@@ -230,17 +230,12 @@ steps:
         source: "#get_docker_config/docker_registry"
       - id: docker_authentication
         source: "#get_docker_config/docker_authentication"
-      - id: status
-        source: "#validate_docker/status"
       - id: parentid
         source: "#get_docker_submission/submitter_synid"
       - id: synapse_config
         source: "#synapseConfig"
-      #- id: input_dir
-      #  valueFrom: "uw_omop_train"
       - id: input_dir
         source: "#get_dataset_info/train_volume"
-        # valueFrom: "uw_omop_covid_training"
       - id: docker_script
         default:
           class: File
@@ -248,7 +243,6 @@ steps:
     out:
       - id: model
       - id: scratch
-      - id: status
 
   run_docker_infer:
     run: run_infer_docker.cwl
@@ -263,8 +257,6 @@ steps:
         source: "#get_docker_config/docker_registry"
       - id: docker_authentication
         source: "#get_docker_config/docker_authentication"
-      - id: status
-        source: "#validate_docker/status"
       - id: parentid
         source: "#get_docker_submission/submitter_synid"
       - id: synapse_config
@@ -275,7 +267,6 @@ steps:
         source: "#run_docker_train/scratch"
       - id: input_dir
         source: "#get_dataset_info/infer_volume"
-        # valueFrom: "uw_omop_covid_05-06-2020"
       - id: stage
         valueFrom: "first"
       - id: docker_script
@@ -284,7 +275,6 @@ steps:
           location: "run_infer_docker.py"
     out:
       - id: predictions
-      - id: status
 
   validation:
     run: validate.cwl
