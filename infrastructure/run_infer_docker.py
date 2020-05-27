@@ -13,8 +13,6 @@ import synapseclient
 
 
 def main(args):
-    if args.status == "INVALID":
-        raise Exception("Docker image is invalid")
 
     syn = synapseclient.Synapse(configPath=args.synapse_config)
     syn.login()
@@ -154,7 +152,7 @@ def main(args):
         try:
             # syn.store(ent)
             print("don't store")
-        except synapseclient.exceptions.SynapseHTTPError:
+        except synapseclient.core.exceptions.SynapseHTTPError:
             pass
 
     #Try to remove the image
@@ -187,7 +185,7 @@ if __name__ == '__main__':
                         help="credentials file")
     parser.add_argument("--parentid", required=True,
                         help="Parent Id of submitter directory")
-    parser.add_argument("--status", required=True, help="Docker image status")
+    parser.add_argument("--status", help="Docker image status")
     parser.add_argument("-m", "--model_files", required=True,
                         help="Model files")
     parser.add_argument("-f", "--scratch_files", required=True,

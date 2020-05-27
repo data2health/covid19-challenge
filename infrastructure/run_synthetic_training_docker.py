@@ -70,8 +70,6 @@ def tar(directory, tar_filename):
 
 
 def main(syn, args):
-    if args.status == "INVALID":
-        raise Exception("Docker image is invalid")
 
     client = docker.from_env()
 
@@ -192,7 +190,7 @@ if __name__ == '__main__':
                         help="credentials file")
     parser.add_argument("--parentid", required=True,
                         help="Parent Id of submitter directory")
-    parser.add_argument("--status", required=True, help="Docker image status")
+    parser.add_argument("--status", help="Docker image status")
     args = parser.parse_args()
     syn = synapseclient.Synapse(configPath=args.synapse_config)
     syn.login()
