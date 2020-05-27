@@ -122,8 +122,9 @@ def convert_overall_status(syn: Synapse, main_queueid: str, sites: list):
     print(query_str)
     invalid_subs = list(evaluation_queue_query(syn, query_str))
     for invalid_sub in invalid_subs:
+        print(invalid_sub['objectId'])
         annotate_with_retry(syn=syn, submissionid=invalid_sub['objectId'],
-                            status = "REJECTED")
+                            status="REJECTED")
 
 
 def main():
