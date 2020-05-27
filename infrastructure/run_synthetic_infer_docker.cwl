@@ -19,8 +19,6 @@ inputs:
     type: string
   - id: parentid
     type: string
-  - id: status
-    type: string
   - id: synapse_config
     type: File
   - id: model
@@ -40,8 +38,6 @@ arguments:
     prefix: -p
   - valueFrom: $(inputs.docker_digest)
     prefix: -d
-  - valueFrom: $(inputs.status)
-    prefix: --status
   - valueFrom: $(inputs.parentid)
     prefix: --parentid
   - valueFrom: $(inputs.synapse_config.path)
@@ -69,8 +65,3 @@ outputs:
     type: File
     outputBinding:
       glob: output/predictions.csv
-  
-  status:
-    type: string
-    outputBinding:
-      outputEval: $("INFERRED")
