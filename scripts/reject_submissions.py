@@ -2,6 +2,7 @@
 Reject submissions that are invalid in UW queue but valid in synthetic queue
 """
 import argparse
+import time
 
 from challengeutils.utils import (evaluation_queue_query,
                                   update_single_submission_status)
@@ -147,6 +148,7 @@ def main():
         print(f"Checking '{evaluation.name}'")
         queue_df.apply(lambda queue_info: update_status(syn, queue_info),
                        axis=1)
+        time.sleep(5)
         convert_overall_status(syn, main_queueid, queue_df['site'].unique())
 
 
