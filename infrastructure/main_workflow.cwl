@@ -182,6 +182,8 @@ steps:
         source: "#get_docker_config/docker_registry"
       - id: docker_authentication
         source: "#get_docker_config/docker_authentication"
+      - id: status
+        source: "#validate_docker/status"
       - id: parentid
         source: "#submitterUploadSynId"
       - id: synapse_config
@@ -197,6 +199,7 @@ steps:
     out:
       - id: model
       - id: scratch
+      - id: status
 
   run_docker_infer:
     run: run_synthetic_infer_docker.cwl
@@ -223,13 +226,13 @@ steps:
         source: "#run_docker_train/scratch"
       - id: input_dir
         source: "#get_dataset_info/infer_volume"
-        # valueFrom: "/home/thomasyu/validation"
       - id: docker_script
         default:
           class: File
           location: "run_synthetic_infer_docker.py"
     out:
       - id: predictions
+      - id: status
 
   # just used for local testing
   # run_docker_infer:
