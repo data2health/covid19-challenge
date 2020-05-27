@@ -118,7 +118,7 @@ def convert_overall_status(syn: Synapse, main_queueid: str, sites: list):
     # Get submissions that have all sites that are invalid
     query_str = (
         f"select objectId from evaluation_{main_queueid} where "
-        f"{site_strs}"
+        f"{site_strs} and status != 'REJECTED'"
     )
     print(query_str)
     invalid_subs = list(evaluation_queue_query(syn, query_str))
