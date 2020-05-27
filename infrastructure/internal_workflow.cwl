@@ -237,6 +237,8 @@ steps:
         source: "#synapseConfig"
       - id: input_dir
         source: "#get_dataset_info/train_volume"
+      - id: training
+        source: "#validate_docker/enable_training"
       - id: docker_script
         default:
           class: File

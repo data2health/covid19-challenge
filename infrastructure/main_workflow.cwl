@@ -185,6 +185,8 @@ steps:
         source: "#get_docker_config/docker_authentication"
       - id: previous
         source: "#check_docker_status/finished"
+      - id: training
+        source: "#validate_docker/enable_training"
       - id: parentid
         source: "#submitterUploadSynId"
       - id: synapse_config
