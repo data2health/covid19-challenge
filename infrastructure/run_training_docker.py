@@ -89,7 +89,7 @@ def main(syn, args):
 
     input_dir = args.input_dir
     data_version = input_dir.split("_train_")
-    if data_version[1] != '':
+    if data_version[1] != '' and args.training:
 
         print("training")
         print("mounting volumes")
@@ -216,7 +216,8 @@ if __name__ == '__main__':
                         help="credentials file")
     parser.add_argument("--parentid", required=True,
                         help="Parent Id of submitter directory")
-    parser.add_argument("--status", help="Docker image status")
+    parser.add_argument("--training", action="store_true",
+                        help="Training Model. Default to False")
     args = parser.parse_args()
     syn = synapseclient.Synapse(configPath=args.synapse_config)
     syn.login()
