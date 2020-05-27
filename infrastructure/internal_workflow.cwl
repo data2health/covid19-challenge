@@ -157,19 +157,20 @@ steps:
         source: "#synapseConfig"
     out: [finished]
 
-  # validate_docker:
-  #   run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/validate_docker.cwl
-  #   in:
-  #     - id: docker_repository
-  #       source: "#get_docker_submission/docker_repository"
-  #     - id: docker_digest
-  #       source: "#get_docker_submission/docker_digest"
-  #     - id: synapse_config
-  #       source: "#synapseConfig"
-  #   out:
-  #     - id: results
-  #     - id: status
-  #     - id: invalid_reasons
+  validate_docker:
+    run: validate_docker.cwl
+    in:
+      - id: docker_repository
+        source: "#get_docker_submission/docker_repository"
+      - id: docker_digest
+        source: "#get_docker_submission/docker_digest"
+      - id: synapse_config
+        source: "#synapseConfig"
+    out:
+      - id: results
+      - id: status
+      - id: invalid_reasons
+      - id: enable_training
 
   # annotate_docker_validation_with_output:
   #   run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
