@@ -67,6 +67,8 @@ steps:
       - id: site
       - id: train_volume
       - id: infer_volume
+      - id: train_runtime
+      - id: infer_runtime
       - id: results
 
   modify_dataset_annotations:
@@ -172,52 +174,6 @@ steps:
       - id: invalid_reasons
       - id: enable_training
 
-  # annotate_docker_validation_with_output:
-  #   run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
-  #   in:
-  #     - id: submissionid
-  #       source: "#submissionId"
-  #     - id: annotation_values
-  #       source: "#validate_docker/results"
-  #     - id: to_public
-  #       default: true
-  #     - id: force
-  #       default: true
-  #     - id: synapse_config
-  #       source: "#synapseConfig"
-  #     - id: previous_annotation_finished
-  #       source: "#annotate_submission_main_userid/finished"
-  #   out: [finished]
-
-  # just used for local testing
-  # run_docker_infer:
-  #   run: run_docker.cwl
-  #   in:
-  #     - id: docker_repository
-  #       source: "#get_docker_submission/docker_repository"
-  #     - id: docker_digest
-  #       source: "#get_docker_submission/docker_digest"
-  #     - id: submissionid
-  #       source: "#submissionId"
-  #     - id: docker_registry
-  #       source: "#get_docker_config/docker_registry"
-  #     - id: docker_authentication
-  #       source: "#get_docker_config/docker_authentication"
-  #     - id: status
-  #       source: "#validate_docker/status"
-  #     - id: parentid
-  #       source: "#submitterUploadSynId"
-  #     - id: synapse_config
-  #       source: "#synapseConfig"
-  #     - id: input_dir
-  #       # Replace this with correct datapath
-  #       valueFrom: "/Users/ThomasY/sage_projects/DREAM/covid19-challenge/infrastructure"
-  #     - id: docker_script
-  #       default:
-  #         class: File
-  #         location: "run_docker.py"
-  #   out:
-  #     - id: predictions
   run_docker_train:
     run: run_training_docker.cwl
     in:
@@ -244,7 +200,7 @@ steps:
           class: File
           location: "run_training_docker.py"
       - id: quota
-        default: 1200
+        source: "#get_dataset_info/train_runtime"
     out:
       - id: model
       - id: scratch
@@ -279,7 +235,7 @@ steps:
           class: File
           location: "run_infer_docker.py"
       - id: quota
-        default: 1200
+        source: "#get_dataset_info/infer_runtime"
     out:
       - id: predictions
 

@@ -85,6 +85,20 @@ outputs:
       loadContents: true
       outputEval: $(JSON.parse(self[0].contents)['infer_volume'])
 
+  - id: train_runtime
+    type: int
+    outputBinding:
+      glob: results.json
+      loadContents: true
+      outputEval: $(JSON.parse(self[0].contents)['train_runtime'])
+
+  - id: infer_runtime
+    type: int
+    outputBinding:
+      glob: results.json
+      loadContents: true
+      outputEval: $(JSON.parse(self[0].contents)['infer_runtime'])
+
   - id: results
     type: File
     outputBinding:
