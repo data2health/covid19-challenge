@@ -1,16 +1,14 @@
 """Run training synthetic docker models"""
 from __future__ import print_function
 import argparse
-from functools import partial
 import getpass
 import os
-import signal
 import subprocess
-import sys
 import time
 
 import docker
 import synapseclient
+from synapseclient.core.exceptions import SynapseHTTPError
 
 
 def create_log_file(log_filename, log_text=None):
@@ -33,8 +31,8 @@ def store_log_file(syn, log_filename, parentid, test=False):
         if not test:
             try:
                 syn.store(ent)
-            except synapseclient.core.exceptions.SynapseHTTPError as err:
-                print(err)
+            except SynapseHTTPError:
+                print("error with storing log file")
 
 
 def remove_docker_container(container_name):
