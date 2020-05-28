@@ -5,8 +5,6 @@ import json
 
 import pandas as pd
 
-FUNC_MAP = {1: q1_validation}
-
 
 def cli():
     """Create CLI for validation"""
@@ -75,7 +73,8 @@ def q1_validation(submission_file, goldstandard_file):
 
 def main():
     args = cli()
-    validation_func = FUNC_MAP[args.question]
+    func_map = {1: q1_validation}
+    validation_func = func_map[args.question]
     submission_status, invalid_reasons = validation_func(
         args.submission_file, args.goldstandard
     )
