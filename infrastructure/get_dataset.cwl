@@ -99,6 +99,20 @@ outputs:
       loadContents: true
       outputEval: $(JSON.parse(self[0].contents)['infer_runtime'])
 
+  - id: goldstandard
+    type: string
+    outputBinding:
+      glob: results.json
+      loadContents: true
+      outputEval: $(JSON.parse(self[0].contents)['goldstandard'])
+
+  - id: question
+    type: int
+    outputBinding:
+      glob: results.json
+      loadContents: true
+      outputEval: $(JSON.parse(self[0].contents)['question'])
+
   - id: results
     type: File
     outputBinding:
