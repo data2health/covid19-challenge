@@ -48,7 +48,9 @@ requirements:
           #               f'{args.site}_submission_status': 'SCORED'}
           #else:
           #  {}
-          new_score = {f'{args.site}_{key}': value for key, value in result.items()}
+          new_score = {f'{args.site}_{key}': value
+                       for key, value in result.items()
+                       if not key.endswith("site")}
           with open(args.results, 'w') as o:
             o.write(json.dumps(new_score))
      
