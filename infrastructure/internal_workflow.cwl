@@ -247,14 +247,8 @@ steps:
     in:
       - id: inputfile
         source: "#run_docker_infer/predictions"
-      - id: entity_type
-        valueFrom: "none"
-      - id: submissionid
-        source: "#submissionId"
-      - id: parentid
-        source: "#get_docker_submission/submitter_synid"
-      - id: synapse_config
-        source: "#synapseConfig"
+      - id: question
+        source: "#get_dataset_info/question"
       - id: goldstandard
         source: "#download_goldstandard/filepath"
     out:
