@@ -45,7 +45,7 @@ outputs:
     outputBinding:
       glob: results.json
       loadContents: true
-      outputEval: $(JSON.parse(self[0].contents)['prediction_file_status'])
+      outputEval: $(JSON.parse(self[0].contents)['submission_status'])
 
   - id: invalid_reasons
     type: string
