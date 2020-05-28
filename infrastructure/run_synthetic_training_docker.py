@@ -1,16 +1,14 @@
 """Run training synthetic docker models"""
 from __future__ import print_function
 import argparse
-from functools import partial
 import getpass
 import os
-import signal
 import subprocess
-import sys
 import time
 
 import docker
 import synapseclient
+from synapseclient.core.exceptions import SynapseHTTPError
 
 
 def create_log_file(log_filename, log_text=None):
@@ -33,8 +31,8 @@ def store_log_file(syn, log_filename, parentid, test=False):
         if not test:
             try:
                 syn.store(ent)
-            except synapseclient.core.exceptions.SynapseHTTPError as err:
-                print(err)
+            except SynapseHTTPError:
+                print("error with storing log file")
 
 
 def remove_docker_container(container_name):
@@ -85,7 +83,7 @@ def main(syn, args):
     input_dir = args.input_dir
 
     data_version = input_dir.split("_train_")
-    if data_version[1] != '':
+    if data_version[1] != '' and args.training:
         print("training")
         print("mounting volumes")
         # These are the locations on the docker that you want your mounted
@@ -192,7 +190,8 @@ if __name__ == '__main__':
                         help="credentials file")
     parser.add_argument("--parentid", required=True,
                         help="Parent Id of submitter directory")
-    parser.add_argument("--status", help="Docker image status")
+    parser.add_argument("--training", action="store_true",
+                        help="Training Model. Default to False")
     args = parser.parse_args()
     syn = synapseclient.Synapse(configPath=args.synapse_config)
     syn.login()
