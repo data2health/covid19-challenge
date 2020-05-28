@@ -104,6 +104,21 @@ steps:
       - id: infer_volume
       - id: results
 
+  annotate_dataset_version:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
+    in:
+      - id: submissionid
+        source: "#submissionId"
+      - id: annotation_values
+        source: "#get_dataset_info/results"
+      - id: to_public
+        default: true
+      - id: force
+        default: true
+      - id: synapse_config
+        source: "#synapseConfig"
+    out: [finished]
+
   validate_docker:
     run: validate_docker.cwl
     in:
