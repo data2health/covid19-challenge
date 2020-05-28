@@ -29,6 +29,8 @@ inputs:
     type: string
   - id: docker_script
     type: File
+  - id: quota
+    type: int
 
 arguments: 
   - valueFrom: $(inputs.docker_script.path)
@@ -48,6 +50,8 @@ arguments:
     prefix: -m
   - valueFrom: $(inputs.scratch.path)
     prefix: -f
+  - valueFrom: $(inputs.quota)
+    prefix: -q
 
 requirements:
   - class: InitialWorkDirRequirement
@@ -57,8 +61,8 @@ requirements:
         entry: |
           {"auths": {"$(inputs.docker_registry)": {"auth": "$(inputs.docker_authentication)"}}}
   - class: InlineJavascriptRequirement
-  - class: ToolTimeLimit
-    timelimit: 1200
+  # - class: ToolTimeLimit
+  #   timelimit: 1200
 
 outputs:
   predictions:
