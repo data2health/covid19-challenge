@@ -29,6 +29,8 @@ inputs:
     type: File
   - id: training
     type: boolean
+  - id: quota
+    type: int
 
 arguments: 
   - valueFrom: $(inputs.docker_script.path)
@@ -46,6 +48,8 @@ arguments:
     prefix: -c
   - valueFrom: $(inputs.input_dir)
     prefix: -i
+  - valueFrom: $(inputs.quota)
+    prefix: -q
 
 requirements:
   - class: InitialWorkDirRequirement

@@ -31,6 +31,8 @@ inputs:
     type: File
   - id: docker_script
     type: File
+  - id: quota
+    type: int
 
 arguments: 
   - valueFrom: $(inputs.docker_script.path)
@@ -52,6 +54,8 @@ arguments:
     prefix: -m
   - valueFrom: $(inputs.scratch.path)
     prefix: -f
+  - valueFrom: $(inputs.quota)
+    prefix: -q
 
 requirements:
   - class: InitialWorkDirRequirement
