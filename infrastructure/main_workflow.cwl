@@ -65,16 +65,6 @@ steps:
         source: "#synapseConfig"
     out: []
 
-  download_goldstandard:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/v0.1/synapse-get-tool.cwl
-    in:
-      - id: synapseid
-        valueFrom: "syn22036993"
-      - id: synapse_config
-        source: "#synapseConfig"
-    out:
-      - id: filepath
-
   get_docker_submission:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.6/get_submission.cwl
     in:
@@ -104,7 +94,20 @@ steps:
       - id: infer_volume
       - id: train_runtime
       - id: infer_runtime
+      - id: goldstandard
+      - id: question
       - id: results
+
+  download_goldstandard:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/v0.1/synapse-get-tool.cwl
+    in:
+      - id: synapseid
+        source: "#get_dataset_info/goldstandard"
+        #valueFrom: "syn22036993"
+      - id: synapse_config
+        source: "#synapseConfig"
+    out:
+      - id: filepath
 
   annotate_dataset_version:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl

@@ -69,6 +69,8 @@ steps:
       - id: infer_volume
       - id: train_runtime
       - id: infer_runtime
+      - id: goldstandard
+      - id: question
       - id: results
 
   modify_dataset_annotations:
@@ -114,7 +116,8 @@ steps:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/v0.1/synapse-get-tool.cwl
     in:
       - id: synapseid
-        valueFrom: "syn22043503"
+        source: "#get_dataset_info/goldstandard"
+        #valueFrom: "syn22043503"
       - id: synapse_config
         source: "#synapseConfig"
     out:
