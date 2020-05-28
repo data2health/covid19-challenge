@@ -48,9 +48,11 @@ requirements:
           #               f'{args.site}_submission_status': 'SCORED'}
           #else:
           #  {}
+          exclude_annotations = ("site", "goldstandard", "question",
+                                 "runtime", "volume")
           new_score = {f'{args.site}_{key}': value
                        for key, value in result.items()
-                       if not key.endswith("site")}
+                       if not key.endswith(exclude_annotations)}
           with open(args.results, 'w') as o:
             o.write(json.dumps(new_score))
      
