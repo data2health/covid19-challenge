@@ -22,6 +22,7 @@ def cli():
     parser.add_argument("-g", "--goldstandard", required=True,
                         help="Goldstandard for scoring")
     args = parser.parse_args()
+    return args
 
 
 def q1_validation(submission_file, goldstandard_file):
