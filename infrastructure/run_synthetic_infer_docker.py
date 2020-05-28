@@ -1,14 +1,77 @@
 """Run inference synthetic docker models"""
 import argparse
-from functools import partial
 import os
-import signal
 import subprocess
-import sys
 import time
 
 import docker
 import synapseclient
+from synapseclient.core.exceptions import SynapseHTTPError
+
+
+def create_log_file(log_filename, log_text=None):
+    """Create log file"""
+    with open(log_filename, 'w') as log_file:
+        if log_text is not None:
+            if isinstance(log_text, bytes):
+                log_text = log_text.decode('utf-8')
+            log_file.write(log_text.encode("ascii", "ignore").decode("ascii"))
+        else:
+            log_file.write("No Logs were written. Please add print "
+                           "statements in your model to receive useful "
+                           "logs!")
+
+
+def store_log_file(syn, log_filename, parentid, test=False):
+    """Store log file"""
+    statinfo = os.stat(log_filename)
+    if statinfo.st_size > 0:
+        ent = synapseclient.File(log_filename, parent=parentid)
+        # Don't store if test
+        if not test:
+            try:
+                syn.store(ent)
+            except SynapseHTTPError:
+                #print(err)
+                print("Error with storing log file")
+
+
+def remove_docker_container(container_name):
+    """Remove docker container"""
+    client = docker.from_env()
+    try:
+        cont = client.containers.get(container_name)
+        cont.stop()
+        cont.remove()
+    except Exception:
+        print("Unable to remove container")
+
+
+def remove_docker_image(image_name):
+    """Remove docker image"""
+    client = docker.from_env()
+    try:
+        client.images.remove(image_name, force=True)
+    except Exception:
+        print("Unable to remove image")
+
+
+def check_runtime(start, container, docker_image, quota):
+    """Check runtime quota
+
+    Args:
+        start: Start time
+        container: Running container
+        docker_image: Docker image name
+        quota: Time quota in seconds
+
+    """
+    timestamp = time.time()
+    if timestamp - start > quota:
+        container.stop()
+        container.remove()
+        remove_docker_image(docker_image)
+        raise Exception(f"Your model has exceeded {quota/60} minutes")
 
 
 def main(args):
@@ -63,6 +126,7 @@ def main(args):
                 cont.remove()
             else:
                 container = cont
+    start = time.time()
     # If the container doesn't exist, make sure to run the docker image
     if container is None:
         #Run as detached, logs will stream below
@@ -75,82 +139,46 @@ def main(args):
                                               mem_limit='10g', stderr=True)
 
         except docker.errors.APIError as err:
-            cont = client.containers.get(args.submissionid)
-            cont.remove()
+            remove_docker_container(args.submissionid)
             errors = str(err) + "\n"
 
     #Create the logfile
     log_filename = args.submissionid + "_infer_log.txt"
-    with open(log_filename, 'w') as log_file:
-        log_file.write("Infererence starting... Please add print statements "
-                       "in your model to receive useful logs!")
-    ent = synapseclient.File(log_filename, parent=args.parentid)
-    try:
-        syn.store(ent)
-    except synapseclient.core.exceptions.SynapseHTTPError:
-        pass
+    starting_text = ("Infererence starting... Please add print statements "
+                     "in your model to receive useful logs!")
+    create_log_file(log_filename, log_text=starting_text)
+    store_log_file(syn, log_filename, args.parentid)
+
     # If the container doesn't exist, there are no logs to write out and no
     # container to remove
     if container is not None:
         # Check if container is still running
         while container in client.containers.list():
             log_text = container.logs()
-            with open(log_filename, 'w') as log_file:
-                if isinstance(log_text, bytes):
-                    log_text = log_text.decode('utf-8')
-                log_file.write(log_text.encode("ascii", "ignore").decode("ascii"))
-            statinfo = os.stat(log_filename)
-            # if statinfo.st_size > 0 and statinfo.st_size/1000.0 <= 50:
-            if statinfo.st_size > 0:
-                ent = synapseclient.File(log_filename, parent=args.parentid)
-                try:
-                    syn.store(ent)
-                except synapseclient.core.exceptions.SynapseHTTPError:
-                    pass
-                time.sleep(60)
+            create_log_file(log_filename, log_text=log_text)
+            store_log_file(syn, log_filename, args.parentid)
+            check_runtime(start, container, docker_image, args.quota)
+            time.sleep(60)
         # Must run again to make sure all the logs are captured
         log_text = container.logs()
-        with open(log_filename, 'w') as log_file:
-            if isinstance(log_text, bytes):
-                log_text = log_text.decode('utf-8')
-            log_file.write(log_text.encode("ascii", "ignore").decode("ascii"))
-        statinfo = os.stat(log_filename)
-        # Only store log file if > 0 bytes
-        if statinfo.st_size > 0: # and statinfo.st_size/1000.0 <= 50
-            ent = synapseclient.File(log_filename, parent=args.parentid)
-            try:
-                syn.store(ent)
-            except synapseclient.core.exceptions.SynapseHTTPError:
-                pass
-
+        create_log_file(log_filename, log_text=log_text)
+        store_log_file(syn, log_filename, args.parentid)
         #Remove container and image after being done
         container.remove()
 
     statinfo = os.stat(log_filename)
     if statinfo.st_size == 0:
-        with open(log_filename, 'w') as log_file:
-            if errors is not None:
-                log_file.write(errors)
-            else:
-                log_file.write("No Logs were written. Please add print "
-                               "statements in your model to receive useful "
-                               "logs!")
-        ent = synapseclient.File(log_filename, parent=args.parentid)
-        try:
-            syn.store(ent)
-        except synapseclient.core.exceptions.SynapseHTTPError:
-            pass
+        create_log_file(log_filename, log_text=errors)
+        store_log_file(syn, log_filename, args.parentid)
 
     #Try to remove the image
-    try:
-        client.images.remove(docker_image, force=True)
-    except Exception:
-        print("Unable to remove image")
+    print("finish inference")
+    remove_docker_image(docker_image)
 
     output_folder = os.listdir(output_dir)
     pred_path = os.path.join(output_dir, "predictions.csv")
     if not output_folder or "predictions.csv" not in output_folder:
-        with open(pred_path, 'w') as p_out:
+        with open(pred_path, 'w'):
             pass
 
 
@@ -172,5 +200,7 @@ if __name__ == '__main__':
                         help="Model files")
     parser.add_argument("-f", "--scratch_files", required=True,
                         help="scratch files")
+    parser.add_argument("-q", "--quota", required=True, type=int,
+                        help="Run Time quota")
     args = parser.parse_args()
     main(args)

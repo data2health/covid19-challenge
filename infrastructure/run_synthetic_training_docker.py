@@ -1,16 +1,14 @@
 """Run training synthetic docker models"""
 from __future__ import print_function
 import argparse
-from functools import partial
 import getpass
 import os
-import signal
 import subprocess
-import sys
 import time
 
 import docker
 import synapseclient
+from synapseclient.core.exceptions import SynapseHTTPError
 
 
 def create_log_file(log_filename, log_text=None):
@@ -33,8 +31,8 @@ def store_log_file(syn, log_filename, parentid, test=False):
         if not test:
             try:
                 syn.store(ent)
-            except synapseclient.core.exceptions.SynapseHTTPError as err:
-                print(err)
+            except SynapseHTTPError:
+                print("error with storing log file")
 
 
 def remove_docker_container(container_name):
@@ -67,6 +65,24 @@ def tar(directory, tar_filename):
     tar_command = ['tar', '-C', directory, '--remove-files', '.', '-cvzf',
                    tar_filename]
     subprocess.check_call(tar_command)
+
+
+def check_runtime(start, container, docker_image, quota):
+    """Check runtime quota
+
+    Args:
+        start: Start time
+        container: Running container
+        docker_image: Docker image name
+        quota: Time quota in seconds
+
+    """
+    timestamp = time.time()
+    if timestamp - start > quota:
+        container.stop()
+        container.remove()
+        remove_docker_image(docker_image)
+        raise Exception(f"Your model has exceeded {quota/60} minutes")
 
 
 def main(syn, args):
@@ -114,6 +130,7 @@ def main(syn, args):
                 else:
                     container = cont
         # If the container doesn't exist, make sure to run the docker image
+        start = time.time()
         if container is None:
             #Run as detached, logs will stream below
             print("running container")
@@ -141,7 +158,9 @@ def main(syn, args):
                 log_text = container.logs()
                 create_log_file(log_filename, log_text=log_text)
                 store_log_file(syn, log_filename, args.parentid)
+                check_runtime(start, container, docker_image, args.quota)
                 time.sleep(60)
+
             # Must run again to make sure all the logs are captured
             log_text = container.logs()
             create_log_file(log_filename, log_text=log_text)
@@ -194,6 +213,8 @@ if __name__ == '__main__':
                         help="Parent Id of submitter directory")
     parser.add_argument("--training", action="store_true",
                         help="Training Model. Default to False")
+    parser.add_argument("-q", "--quota", required=True, type=int,
+                        help="Run Time quota")
     args = parser.parse_args()
     syn = synapseclient.Synapse(configPath=args.synapse_config)
     syn.login()

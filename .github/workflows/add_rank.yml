@@ -1,14 +1,14 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: reject_submission
+name: add_rank
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "0 0 * * 5"
 
 jobs:
-  reject:
+  rank:
 
     runs-on: ubuntu-latest
 
@@ -26,4 +26,4 @@ jobs:
 
     - name: Reject Submissions
       run: |
-        python scripts/reject_submissions.py --username ${{ secrets.SYN_USERNAME }} --password ${{ secrets.SYN_PASSWORD }}
+        python scripts/add_rank.py 9614453 --username ${{ secrets.SYN_USERNAME }} --password ${{ secrets.SYN_PASSWORD }}
