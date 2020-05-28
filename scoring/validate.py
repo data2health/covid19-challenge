@@ -85,8 +85,8 @@ def main():
     result = {'submission_errors': "\n".join(invalid_reasons),
               'submission_status': submission_status}
 
-    with open(args.results, 'w') as o:
-        o.write(json.dumps(result))
+    with open(args.results, 'w') as result_out:
+        result_out.write(json.dumps(result))
 
 
 if __name__ == "__main__":
