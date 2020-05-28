@@ -5,12 +5,16 @@ import json
 
 import pandas as pd
 
+FUNC_MAP = {1: q1_validation}
+
 
 def cli():
     """Create CLI for validation"""
     parser = argparse.ArgumentParser()
     parser.add_argument("-s", "--submission_file",
                         help="Submission File")
+    parser.add_argument("-q", "--question", type=int,
+                        help="Question number")
     parser.add_argument("-r", "--results", required=True,
                         help="validation results")
     parser.add_argument("-r", "--results", required=True,
@@ -72,8 +76,8 @@ def q1_validation(submission_file, goldstandard_file):
 
 def main():
     args = cli()
-
-    submission_statuts, invalid_reasons = q1_validation(
+    validation_func = FUNC_MAP[args.question]
+    submission_status, invalid_reasons = validation_func(
         args.submission_file, args.goldstandard
     )
 
