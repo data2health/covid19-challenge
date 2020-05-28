@@ -20,7 +20,6 @@ inputs:
     type: File
 
 arguments:
-  - valueFrom: validate.py
   - valueFrom: $(inputs.inputfile)
     prefix: -s
   - valueFrom: results.json
