@@ -197,6 +197,8 @@ steps:
         default:
           class: File
           location: "run_synthetic_training_docker.py"
+      - id: quota
+        default: 1200
     out:
       - id: model
       - id: scratch
@@ -230,6 +232,8 @@ steps:
         default:
           class: File
           location: "run_synthetic_infer_docker.py"
+      - id: quota
+        default: 1200
     out:
       - id: predictions
 

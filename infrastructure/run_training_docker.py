@@ -68,6 +68,24 @@ def tar(directory, tar_filename):
     subprocess.check_call(tar_command)
 
 
+def check_runtime(start, container, docker_image, quota):
+    """Check runtime quota
+
+    Args:
+        start: Start time
+        container: Running container
+        docker_image: Docker image name
+        quota: Time quota in seconds
+
+    """
+    timestamp = time.time()
+    if timestamp - start > quota:
+        container.stop()
+        container.remove()
+        remove_docker_image(docker_image)
+        raise Exception(f"Your model has exceeded {quota/60} minutes")
+
+
 def main(syn, args):
     client = docker.from_env()
     api_client = docker.APIClient(base_url='unix://var/run/docker.sock')
@@ -136,6 +154,7 @@ def main(syn, args):
         open(log_filename, 'w').close()
         stats_log = str(args.submissionid) + "_training_stats_log.txt"
         open(stats_log, 'w').close()
+        start = time.time()
         # If the container doesn't exist, there are no logs to write out and
         # no container to remove
         if container is not None:
@@ -146,6 +165,7 @@ def main(syn, args):
                 log_text = container.logs(timestamps=True)
                 create_log_file(log_filename, log_text=log_text)
                 store_log_file(syn, log_filename, args.parentid, test=True)
+                check_runtime(start, container, docker_image, args.quota)
                 time.sleep(60)
             # Must run again to make sure all the logs are captured
             log_text = container.logs()
@@ -215,6 +235,8 @@ if __name__ == '__main__':
                         help="Parent Id of submitter directory")
     parser.add_argument("--training", action="store_true",
                         help="Training Model. Default to False")
+    parser.add_argument("-q", "--quota", required=True, type=int,
+                        help="Run Time quota")
     args = parser.parse_args()
     syn = synapseclient.Synapse(configPath=args.synapse_config)
     syn.login()

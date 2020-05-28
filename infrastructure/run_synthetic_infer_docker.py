@@ -56,6 +56,24 @@ def remove_docker_image(image_name):
         print("Unable to remove image")
 
 
+def check_runtime(start, container, docker_image, quota):
+    """Check runtime quota
+
+    Args:
+        start: Start time
+        container: Running container
+        docker_image: Docker image name
+        quota: Time quota in seconds
+
+    """
+    timestamp = time.time()
+    if timestamp - start > quota:
+        container.stop()
+        container.remove()
+        remove_docker_image(docker_image)
+        raise Exception(f"Your model has exceeded {quota/60} minutes")
+
+
 def main(args):
     syn = synapseclient.Synapse(configPath=args.synapse_config)
     syn.login()
@@ -108,6 +126,7 @@ def main(args):
                 cont.remove()
             else:
                 container = cont
+    start = time.time()
     # If the container doesn't exist, make sure to run the docker image
     if container is None:
         #Run as detached, logs will stream below
@@ -138,6 +157,7 @@ def main(args):
             log_text = container.logs()
             create_log_file(log_filename, log_text=log_text)
             store_log_file(syn, log_filename, args.parentid)
+            check_runtime(start, container, docker_image, args.quota)
             time.sleep(60)
         # Must run again to make sure all the logs are captured
         log_text = container.logs()
@@ -180,5 +200,7 @@ if __name__ == '__main__':
                         help="Model files")
     parser.add_argument("-f", "--scratch_files", required=True,
                         help="scratch files")
+    parser.add_argument("-q", "--quota", required=True, type=int,
+                        help="Run Time quota")
     args = parser.parse_args()
     main(args)
