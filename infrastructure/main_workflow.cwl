@@ -233,7 +233,7 @@ steps:
           class: File
           location: "run_synthetic_infer_docker.py"
       - id: quota
-        default: 1
+        default: 1200
     out:
       - id: predictions
 
