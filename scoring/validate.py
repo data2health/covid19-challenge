@@ -17,8 +17,6 @@ def cli():
                         help="Question number")
     parser.add_argument("-r", "--results", required=True,
                         help="validation results")
-    parser.add_argument("-r", "--results", required=True,
-                        help="validation results")
     parser.add_argument("-g", "--goldstandard", required=True,
                         help="Goldstandard for scoring")
     args = parser.parse_args()
