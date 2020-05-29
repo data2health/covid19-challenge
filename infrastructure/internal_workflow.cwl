@@ -329,15 +329,15 @@ steps:
         source: "#download_goldstandard/filepath"
       - id: submissionid
         source: "#submissionId"
-      - id: status
-        source: "#validation/status"
+      - id: question
+        source: "#get_dataset_info/question"
       - id: previous
         source: "#check_status/finished"
     out:
       - id: results
 
   score_email:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/score_email.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.6/score_email.cwl
     in:
       - id: submissionid
         source: "#get_submissionid/submissionid"
