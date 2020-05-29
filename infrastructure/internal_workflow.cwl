@@ -345,8 +345,6 @@ steps:
         source: "#synapseConfig"
       - id: results
         source: "#scoring/results"
-      - id: private_annotations
-        default: ['submission_status']
     out: []
 
   # Add tool to revise scores to add extra dataset queue
