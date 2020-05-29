@@ -9,8 +9,8 @@ parser$add_argument('-g', '--goldstandard',  type = "character", required = T,
                     help = 'Goldstandard path')
 parser$add_argument('-r', '--results',  type = "character", required = T,
                     help = 'Results file')
-parser$add_argument('-s', '--status',  type = "character", required = T,
-                    help = 'Submission status')
+parser$add_argument('-q', '--question',  type = "character", required = T,
+                    help = 'Question Number')
 args <- parser$parse_args()
 
 compute_scores <- function(submission_path, goldstandard_path) {
@@ -30,15 +30,11 @@ compute_scores <- function(submission_path, goldstandard_path) {
   c('AUC' = round(roc$auc, 6),
     'PRAUC' = round(pr$auc.integral, 6))
 }
+# Mapping of scores
+score_map = list("1" = compute_scores)
 
-
-scores = compute_scores(args$submission_file, args$goldstandard)
-prediction_file_status = "SCORED"
-# Both of these are necessary for the workflows to work.
-# TODO: Patch workflow tool to accept submission_status
-#       so prediction_file_status can be removed
-scores[['submission_status']] = prediction_file_status
-scores[['prediction_file_status']] = prediction_file_status
+scores = score_map[[args$question]](args$submission_file, args$goldstandard)
+scores[['submission_status']] = "SCORED"
 
 result_list = list()
 for (key in names(scores)) {
