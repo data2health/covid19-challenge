@@ -1,5 +1,5 @@
-"""Validation of COVID-19 challenge"""
 #!/usr/bin/env python
+"""Validation of COVID-19 challenge"""
 import argparse
 import json
 
