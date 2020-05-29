@@ -31,6 +31,8 @@ compute_scores <- function(submission_path, goldstandard_path) {
     'PRAUC' = round(pr$auc.integral, 6))
 }
 
+
+scores = compute_scores(args$submission_file, args$goldstandard)
 prediction_file_status = "SCORED"
 # Both of these are necessary for the workflows to work.
 # TODO: Patch workflow tool to accept submission_status
