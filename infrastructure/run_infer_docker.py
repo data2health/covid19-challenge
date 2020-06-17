@@ -156,6 +156,7 @@ def main(args):
     start = time.time()
     # If the container doesn't exist, there are no logs to write out and no
     # container to remove
+    log_text = "No logs"
     if container is not None:
         # Check if container is still running
         while container in client.containers.list():
@@ -178,7 +179,7 @@ def main(args):
             json.dump(inspection, inspection_output, indent=4)
 
         subprocess.check_call(["docker", "cp", os.path.abspath(inspection_path),
-                                "logging:/logs/" + str(args.submissionid) + "/"])
+                               "logging:/logs/" + str(args.submissionid) + "/"])
 
         #Remove container and image after being done
         container.remove()
