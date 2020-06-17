@@ -267,7 +267,7 @@ steps:
         source: "#validation/status"
       - id: invalid_reasons
         source: "#validation/invalid_reasons"
-      - errors_only
+      - id: errors_only
         default: true
     out: [finished]
 
