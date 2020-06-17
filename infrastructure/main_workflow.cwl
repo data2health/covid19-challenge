@@ -38,7 +38,7 @@ steps:
     out: [json_out]
 
   annotate_adminsynid:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/annotate_submission.cwl
     in:
       - id: submissionid
         source: "#submissionId"
@@ -53,7 +53,7 @@ steps:
     out: [finished]
 
   set_permissions:
-    run:  https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/set_permissions.cwl
+    run:  https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/set_permissions.cwl
     in:
       - id: entityid
         source: "#submitterUploadSynId"
@@ -66,7 +66,7 @@ steps:
     out: []
 
   get_docker_submission:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.6/get_submission.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/get_submission.cwl
     in:
       - id: submissionid
         source: "#submissionId"
@@ -110,7 +110,7 @@ steps:
       - id: filepath
 
   annotate_dataset_version:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/annotate_submission.cwl
     in:
       - id: submissionid
         source: "#submissionId"
@@ -140,7 +140,7 @@ steps:
       - id: enable_training
 
   annotate_docker_validation_with_output:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/annotate_submission.cwl
     in:
       - id: submissionid
         source: "#submissionId"
@@ -155,7 +155,7 @@ steps:
     out: [finished]
 
   validation_docker_email:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/validate_email.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/validate_email.cwl
     in:
       - id: submissionid
         source: "#submissionId"
@@ -170,7 +170,7 @@ steps:
     out: [finished]
 
   check_docker_status:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/check_status.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/check_status.cwl
     in:
       - id: status
         source: "#validate_docker/status"
@@ -181,7 +181,7 @@ steps:
     out: [finished]
 
   get_docker_config:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/get_docker_config.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/get_docker_config.cwl
     in:
       - id: synapse_config
         source: "#synapseConfig"
@@ -258,7 +258,7 @@ steps:
       - id: predictions
 
   upload_results:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.6/upload_to_synapse.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/upload_to_synapse.cwl
     in:
       - id: infile
         source: "#run_docker_infer/predictions"
@@ -276,7 +276,7 @@ steps:
       - id: results
 
   annotate_docker_upload_results:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/annotate_submission.cwl
     in:
       - id: submissionid
         source: "#submissionId"
@@ -305,7 +305,7 @@ steps:
       - id: invalid_reasons
   
   validation_email:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/validate_email.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/validate_email.cwl
     in:
       - id: submissionid
         source: "#submissionId"
@@ -320,7 +320,7 @@ steps:
     out: [finished]
 
   annotate_validation_with_output:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/annotate_submission.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/annotate_submission.cwl
     in:
       - id: submissionid
         source: "#submissionId"
@@ -335,7 +335,7 @@ steps:
     out: [finished]
 
   check_status:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.5/check_status.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/check_status.cwl
     in:
       - id: status
         source: "#validation/status"
@@ -367,7 +367,7 @@ steps:
     out: [submission_out]
 
   upload_submission_file:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.6/upload_to_synapse.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/upload_to_synapse.cwl
     in:
       - id: infile
         source: "#create_submission_file/submission_out"
@@ -385,7 +385,7 @@ steps:
       - id: results
 
   submit_to_challenge:
-    run: submit_to_challenge.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/submit_to_challenge.cwl
     scatter: evaluationid
     in:
       - id: submission_file
