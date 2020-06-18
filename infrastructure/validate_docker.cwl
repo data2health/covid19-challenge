@@ -134,7 +134,9 @@ requirements:
               labels['enable_training'] = training.upper() == "TRUE"
           else:
             labels['enable_training'] = False
-
+          keep_labels = ['enable_training', 'ranked_features', 'references', 'description',
+                         'challenge']
+          labels = {key: value for key, value in labels.items() if key in keep_labels}
           result = {'submission_errors':"\n".join(invalid_reasons),
                     'submission_status':status}
           result.update(labels)
@@ -144,9 +146,9 @@ requirements:
             result['detailed_information'] = (
               "<details>\n\n"
               "<summary>Expand for details</summary>\n\n"
-              f"**Description:** {labels['description']}\n"
-              f"**Ranked features:** {features}\n"
-              f"**References:** {references}\n\n"
+              f"**Description:** {labels['description'][:100]}\n"
+              f"**Ranked features:** {features[:100]}\n"
+              f"**References:** {references[:100]}\n\n"
               "</details>")
           else:
             result['detailed_information'] = 'No Details'
