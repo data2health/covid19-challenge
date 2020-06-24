@@ -4,6 +4,7 @@ Reject submissions that are invalid in UW queue but valid in synthetic queue
 import argparse
 import time
 
+from challengeutils.annotations import update_submission_status
 from challengeutils.utils import (evaluation_queue_query,
                                   update_single_submission_status)
 import pandas as pd
@@ -54,6 +55,7 @@ def annotate_submission(syn: Synapse, submissionid: str,
     sub_status = update_single_submission_status(sub_status, annotation_dict,
                                                  is_private=is_private,
                                                  force=force)
+    sub_status = update_submission_status(sub_status, annotation_dict)
     syn.store(sub_status)
     return MockResponse
 

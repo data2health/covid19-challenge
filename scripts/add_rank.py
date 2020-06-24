@@ -1,6 +1,7 @@
 """Add a challenge question"""
 import argparse
 
+from challengeutils.annotations import update_submission_status
 from challengeutils.utils import (evaluation_queue_query,
                                   update_single_submission_status)
 import pandas as pd
@@ -63,6 +64,9 @@ def add_rank(syn, resultsdf, site, score_column):
         updated = update_single_submission_status(
             sub_status, {f"{site}_rank": row['ranking']},
             is_private=False
+        )
+        updated = update_submission_status(
+            updated, {f"{site}_rank": row['ranking']}
         )
         syn.store(updated)
 
