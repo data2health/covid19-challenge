@@ -7,9 +7,13 @@ Datasets must be put in `docker volumes` and must be named.
 ```
 {site}_{data_model}_covid_q{number}_train_{train_dataset_version}
 {site}_{data_model}_covid_q{number}_infer_{infer_dataset_version}
-# Examples
+# Examples (UW)
 uw_omop_covid_q1_train_05-06-2020
 uw_omop_covid_q1_infer_05-06-2020
+
+# Examples (synthetic)
+synthetic_omop_covid_q1_train_07-06-2020
+synthetic_omop_covid_q1_infer_07-06-2020
 ```
 
 Here is how you create a docker volume.
