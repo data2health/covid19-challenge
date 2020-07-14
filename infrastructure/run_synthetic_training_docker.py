@@ -108,7 +108,7 @@ def main(syn, args):
         # volumes to be + permissions in docker (ro, rw)
         # It has to be in this format '/output:rw'
         mounted_volumes = {scratch_dir: '/scratch:rw',
-                           input_dir: '/train:ro',
+                           input_dir: '/data:ro',
                            model_dir: '/model:rw'}
         #All mounted volumes here in a list
         all_volumes = [scratch_dir, input_dir, model_dir]
