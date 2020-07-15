@@ -23,8 +23,8 @@ inputs:
     type: File
   - id: model
     type: File
-  - id: scratch
-    type: File
+  # - id: scratch
+  #   type: File
   - id: input_dir
     type: string
   - id: docker_script

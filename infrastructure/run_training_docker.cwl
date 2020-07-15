@@ -67,7 +67,7 @@ outputs:
     outputBinding:
       glob: model_files.tar.gz
 
-  scratch:
-    type: File
-    outputBinding:
-      glob: scratch_files.tar.gz
+  # scratch:
+  #   type: File
+  #   outputBinding:
+  #     glob: scratch_files.tar.gz

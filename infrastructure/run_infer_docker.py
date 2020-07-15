@@ -89,14 +89,14 @@ def main(args):
     output_dir = os.path.join(os.getcwd(), "output")
     input_dir = args.input_dir
     model_files = args.model_files
-    scratch_files = args.scratch_files
+    # scratch_files = args.scratch_files
     stage = args.stage
 
     scratch_dir = os.path.join(os.getcwd(), "scratch")
     os.mkdir(scratch_dir)
 
-    untar_command = ['tar', '-C', scratch_dir, '-xvf', scratch_files]
-    subprocess.check_call(untar_command)
+    # untar_command = ['tar', '-C', scratch_dir, '-xvf', scratch_files]
+    # subprocess.check_call(untar_command)
 
     model_dir = os.path.join(os.getcwd(), "model")
     os.mkdir(model_dir)
@@ -216,8 +216,8 @@ if __name__ == '__main__':
                         help="Parent Id of submitter directory")
     parser.add_argument("-m", "--model_files", required=True,
                         help="Model files")
-    parser.add_argument("-f", "--scratch_files", required=True,
-                        help="scratch files")
+    # parser.add_argument("-f", "--scratch_files", required=True,
+    #                     help="scratch files")
     parser.add_argument("--stage", required=True, help="stage of pipeline")
     parser.add_argument("-q", "--quota", required=True, type=int,
                         help="Run Time quota")
