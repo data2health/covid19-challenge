@@ -48,8 +48,8 @@ arguments:
     prefix: -i
   - valueFrom: $(inputs.model.path)
     prefix: -m
-  - valueFrom: $(inputs.scratch.path)
-    prefix: -f
+  # - valueFrom: $(inputs.scratch.path)
+  #   prefix: -f
   - valueFrom: $(inputs.quota)
     prefix: -q
 
