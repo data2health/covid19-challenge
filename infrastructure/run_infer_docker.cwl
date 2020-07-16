@@ -27,8 +27,8 @@ inputs:
     type: string
   - id: model
     type: File
-  - id: scratch
-    type: File
+  # - id: scratch
+  #   type: File
   - id: docker_script
     type: File
   - id: quota
@@ -52,8 +52,8 @@ arguments:
     prefix: --stage
   - valueFrom: $(inputs.model.path)
     prefix: -m
-  - valueFrom: $(inputs.scratch.path)
-    prefix: -f
+  # - valueFrom: $(inputs.scratch.path)
+  #   prefix: -f
   - valueFrom: $(inputs.quota)
     prefix: -q
 

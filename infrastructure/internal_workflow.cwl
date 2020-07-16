@@ -206,7 +206,7 @@ steps:
         source: "#get_dataset_info/train_runtime"
     out:
       - id: model
-      - id: scratch
+      # - id: scratch
 
   run_docker_infer:
     run: run_infer_docker.cwl
@@ -227,8 +227,8 @@ steps:
         source: "#synapseConfig"
       - id: model
         source: "#run_docker_train/model"
-      - id: scratch
-        source: "#run_docker_train/scratch"
+      # - id: scratch
+      #   source: "#run_docker_train/scratch"
       - id: input_dir
         source: "#get_dataset_info/infer_volume"
       - id: stage

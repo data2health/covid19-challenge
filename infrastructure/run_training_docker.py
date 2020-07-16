@@ -211,12 +211,12 @@ def main(syn, args):
 
     tar(model_dir, 'model_files.tar.gz')
 
-    list_scratch = os.listdir(scratch_dir)
-    if not list_scratch:
-        scratch_fill = os.path.join(scratch_dir, "scratch_fill.txt")
-        open(scratch_fill, 'w').close()
+    # list_scratch = os.listdir(scratch_dir)
+    # if not list_scratch:
+    #     scratch_fill = os.path.join(scratch_dir, "scratch_fill.txt")
+    #     open(scratch_fill, 'w').close()
 
-    tar(scratch_dir, 'scratch_files.tar.gz')
+    # tar(scratch_dir, 'scratch_files.tar.gz')
 
 
 if __name__ == '__main__':
