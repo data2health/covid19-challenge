@@ -120,6 +120,8 @@ def create_main_bundle(syn: Synapse, question: int) -> dict:
         principalId=3407544
     )
 
+    # No need to link new entities for workflows because all questions
+    # will run the same main workflow
     print("ACTION ITEM-Add to NCAT's docker-compose .env")
     print({main_queue.id: "syn21897228",
            main_queue_test.id: "syn21897227"})
@@ -161,15 +163,19 @@ def create_site_bundle(syn: Synapse, question: int, site: str) -> dict:
         principalId=3407544
     )
 
-    wf_path = os.path.join("covid19-challenge-master/infrastructure",
+    wf_path = os.path.join("covid19-challenge-{}/infrastructure",
                            "internal_workflow.cwl")
 
-    ent = create_entity(syn, name=f"COVID-19 Internal {site}",
-                        link=MASTER,
-                        annotations={'ROOT_TEMPLATE': wf_path})
-    test_ent = create_entity(syn, name=f"COVID-19 Internal {site} TEST",
-                             link=DEV,
-                             annotations={'ROOT_TEMPLATE': wf_path})
+    ent = create_entity(
+        syn, name=f"COVID-19 Internal {site}",
+        link=MASTER,
+        annotations={'ROOT_TEMPLATE': wf_path.format("master")}
+    )
+    test_ent = create_entity(
+        syn, name=f"COVID-19 Internal {site} TEST",
+        link=DEV,
+        annotations={'ROOT_TEMPLATE': wf_path.format("develop")}
+    )
 
     print(f"ACTION ITEM-Add to {site}'s docker-compose .env")
     print({internal.id: ent.id,
@@ -191,29 +197,29 @@ def append_dataset_mapping(syn: Synapse, queue: str, site: str):
         syn.store(table)
 
 
-def add_results_leaderboard(syn: Synapse, question: int, sites: list,
-                            queue: str):
-    """Adding results leaderboard"""
+# def add_results_leaderboard(syn: Synapse, question: int, sites: list,
+#                             queue: str):
+#     """Adding results leaderboard"""
 
-    result_md = ("This page lists the performance of the models submitted to "
-                 f"Challenge Question {question}.\n\n"
-                 "${toc}\n\n---\n\n")
-    result_md_path = os.path.join(SCRIPT_DIR, "results.md")
-    for site in sites:
-        with open(result_md_path, "r")  as results_f:
-            markdown_text = results_f.read()
-            markdown_text = markdown_text.replace("INTERNAL", site)
-            markdown_text = markdown_text.replace("QUEUEID", queue)
-        result_md += markdown_text
-    results_wiki = synapseclient.Wiki(title=f"Question {question} Results",
-                                      markdown=result_md,
-                                      owner="syn21849256",
-                                      parentWikiId="601869")
-    wiki = syn.store(results_wiki)
-    print(
-        "ACTION ITEM-"
-        f"Revise https://www.synapse.org/#!Synapse:syn21849256/wiki/{wiki.id}"
-    )
+#     result_md = ("This page lists the performance of the models submitted to "
+#                  f"Challenge Question {question}.\n\n"
+#                  "${toc}\n\n---\n\n")
+#     result_md_path = os.path.join(SCRIPT_DIR, "results.md")
+#     for site in sites:
+#         with open(result_md_path, "r")  as results_f:
+#             markdown_text = results_f.read()
+#             markdown_text = markdown_text.replace("INTERNAL", site)
+#             markdown_text = markdown_text.replace("QUEUEID", queue)
+#         result_md += markdown_text
+#     results_wiki = synapseclient.Wiki(title=f"Question {question} Results",
+#                                       markdown=result_md,
+#                                       owner="syn21849256",
+#                                       parentWikiId="601869")
+#     wiki = syn.store(results_wiki)
+#     print(
+#         "ACTION ITEM-"
+#         f"Revise https://www.synapse.org/#!Synapse:syn21849256/wiki/{wiki.id}"
+#     )
 
 
 def add_dashboard_leaderboard(syn: Synapse, question: int, queue: str):
@@ -238,35 +244,35 @@ def add_dashboard_leaderboard(syn: Synapse, question: int, queue: str):
     )
 
 
-def add_internal_live_leaderboard(syn: Synapse, question: int, sites: list,
-                                  queue: str):
-    """Adding live leaderboard"""
-    live_md_path = os.path.join(SCRIPT_DIR, "live.md")
-    all_text = ''
-    for site in sites:
-        with open(live_md_path, "r")  as live_f:
-            markdown_text = live_f.read()
-            markdown_text = markdown_text.replace("INTERNAL", site)
-            markdown_text = markdown_text.replace("QUEUEID", queue)
-            markdown_text = markdown_text.replace("NUM", question)
-        all_text += markdown_text
-    live_wiki = synapseclient.Wiki(title=f"Internal Q{question} Live Results",
-                                   markdown=all_text,
-                                   owner="syn21849256",
-                                   parentWikiId="601940")
-    wiki = syn.store(live_wiki)
-    print(
-        "ACTION ITEM-"
-        f"Revise https://www.synapse.org/#!Synapse:syn21849256/wiki/{wiki.id}"
-    )
+# def add_internal_live_leaderboard(syn: Synapse, question: int, sites: list,
+#                                   queue: str):
+#     """Adding live leaderboard"""
+#     live_md_path = os.path.join(SCRIPT_DIR, "live.md")
+#     all_text = ''
+#     for site in sites:
+#         with open(live_md_path, "r")  as live_f:
+#             markdown_text = live_f.read()
+#             markdown_text = markdown_text.replace("INTERNAL", site)
+#             markdown_text = markdown_text.replace("QUEUEID", queue)
+#             markdown_text = markdown_text.replace("NUM", question)
+#         all_text += markdown_text
+#     live_wiki = synapseclient.Wiki(title=f"Internal Q{question} Live Results",
+#                                    markdown=all_text,
+#                                    owner="syn21849256",
+#                                    parentWikiId="601940")
+#     wiki = syn.store(live_wiki)
+#     print(
+#         "ACTION ITEM-"
+#         f"Revise https://www.synapse.org/#!Synapse:syn21849256/wiki/{wiki.id}"
+#     )
 
 
-def add_internal_expert_leaderboard():
-    pass
+# def add_internal_expert_leaderboard():
+#     pass
 
 
-def add_internal_test_leaderboard():
-    pass
+# def add_internal_test_leaderboard():
+#     pass
 
 
 def cli():
@@ -309,18 +315,18 @@ def main():
         "ACTION ITEM-Update Results"
         "https://www.synapse.org/#!Synapse:syn21849256/wiki/601940"
     )
-    add_results_leaderboard(syn, question, sites, main_queue['main_queueid'])
+    # add_results_leaderboard(syn, question, sites, main_queue['main_queueid'])
     print(
         "ACTION ITEM-Update Submission Dashboards"
         "https://www.synapse.org/#!Synapse:syn21849256/wiki/601879"
     )
-    add_dashboard_leaderboard(syn, question, main_queue['main_queueid'])
+    # add_dashboard_leaderboard(syn, question, main_queue['main_queueid'])
     print(
         "ACTION ITEM-Update Internal Leaderboard"
         "https://www.synapse.org/#!Synapse:syn21849256/wiki/601940"
     )
-    add_internal_live_leaderboard(syn, question, sites,
-                                  main_queue['main_queueid'])
+    # add_internal_live_leaderboard(syn, question, sites,
+    #                               main_queue['main_queueid'])
 
 
 if __name__ == "__main__":
