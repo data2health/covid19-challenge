@@ -9,7 +9,7 @@ baseCommand: python3
 
 hints:
   DockerRequirement:
-    dockerPull: sagebionetworks/synapsepythonclient:v2.0.0
+    dockerPull: sagebionetworks/synapsepythonclient:v2.1.0
 
 inputs:
   - id: queueid
@@ -54,7 +54,7 @@ requirements:
             raise ValueError("Dataset Mapping is not set")
           if len(dataset_mappingdf) > 1:
             raise ValueError("Duplicated 'queue' not allowed")
-
+          dataset_mappingdf = dataset_mappingdf.fillna('')
           dataset_info = dataset_mappingdf.to_dict('records')[0]
           dataset_info['submission_status'] = "EVALUATION_IN_PROGRESS"
           dataset_info['train_volume'] = f"{dataset_info['dataset_name']}_train_{dataset_info['train_dataset_version']}"
@@ -84,6 +84,34 @@ outputs:
       glob: results.json
       loadContents: true
       outputEval: $(JSON.parse(self[0].contents)['infer_volume'])
+
+  - id: train_runtime
+    type: int
+    outputBinding:
+      glob: results.json
+      loadContents: true
+      outputEval: $(JSON.parse(self[0].contents)['train_runtime'])
+
+  - id: infer_runtime
+    type: int
+    outputBinding:
+      glob: results.json
+      loadContents: true
+      outputEval: $(JSON.parse(self[0].contents)['infer_runtime'])
+
+  - id: goldstandard
+    type: string
+    outputBinding:
+      glob: results.json
+      loadContents: true
+      outputEval: $(JSON.parse(self[0].contents)['goldstandard'])
+
+  - id: question
+    type: int
+    outputBinding:
+      glob: results.json
+      loadContents: true
+      outputEval: $(JSON.parse(self[0].contents)['question'])
 
   - id: results
     type: File

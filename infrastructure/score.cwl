@@ -8,15 +8,15 @@ baseCommand: score.R
 
 hints:
   DockerRequirement:
-    dockerPull: docker.synapse.org/syn21849256/covid-scoring:v1
+    dockerPull: docker.synapse.org/syn21849256/covid-scoring:v2
 
 inputs:
   - id: inputfile
     type: File
   - id: goldstandard
     type: File
-  - id: status
-    type: string
+  - id: question
+    type: int
   - id: submissionid
     type: int
   - id: previous
@@ -25,8 +25,8 @@ inputs:
 arguments:
   - valueFrom: $(inputs.inputfile.path)
     prefix: -f
-  - valueFrom: $(inputs.status)
-    prefix: -s
+  - valueFrom: $(inputs.question)
+    prefix: -q
   - valueFrom: $(inputs.goldstandard.path)
     prefix: -g
   - valueFrom: results.json

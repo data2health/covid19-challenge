@@ -8,7 +8,7 @@ baseCommand: python3
 
 hints:
   DockerRequirement:
-    dockerPull: sagebionetworks/synapsepythonclient:v2.0.0
+    dockerPull: sagebionetworks/synapsepythonclient:v2.1.0
 
 inputs:
   - id: docker_repository
@@ -96,7 +96,6 @@ requirements:
             docker_size = sum([layer['size'] for layer in resp.json()['layers']])
             if docker_size/1000000000.0 >= 1000:
               invalid_reasons.append("Docker container must be less than a teribyte")
-            
 
             blob_request_url = '{0}/v2/{1}/blobs/{2}'.format(index_endpoint, docker_repo, resp.json()['config']['digest'])
             blob_resp = requests.get(blob_request_url, headers={'Authorization': 'Bearer %s' % token})
@@ -127,6 +126,17 @@ requirements:
           else:
             status = "EVALUATION_IN_PRORGRESS"
 
+          training = labels.get("enable_training")
+          if training is not None:
+            if training.upper() not in ["TRUE", "FALSE"]:
+              invalid_reasons.append("If you specify enable_training, it must be 'true' or 'false'.")
+            else:
+              labels['enable_training'] = training.upper() == "TRUE"
+          else:
+            labels['enable_training'] = False
+          keep_labels = ['enable_training', 'ranked_features', 'references', 'description',
+                         'challenge']
+          labels = {key: value for key, value in labels.items() if key in keep_labels}
           result = {'submission_errors':"\n".join(invalid_reasons),
                     'submission_status':status}
           result.update(labels)
@@ -136,9 +146,9 @@ requirements:
             result['detailed_information'] = (
               "<details>\n\n"
               "<summary>Expand for details</summary>\n\n"
-              f"**Description:** {labels['description']}\n"
-              f"**Ranked features:** {features}\n"
-              f"**References:** {references}\n\n"
+              f"**Description:** {labels['description'][:100]}\n"
+              f"**Ranked features:** {features[:100]}\n"
+              f"**References:** {references[:100]}\n\n"
               "</details>")
           else:
             result['detailed_information'] = 'No Details'
@@ -165,3 +175,10 @@ outputs:
       glob: results.json
       loadContents: true
       outputEval: $(JSON.parse(self[0].contents)['submission_errors'])
+
+  - id: enable_training
+    type: boolean
+    outputBinding:
+      glob: results.json
+      loadContents: true
+      outputEval: $(JSON.parse(self[0].contents)['enable_training'])

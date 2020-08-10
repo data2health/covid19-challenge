@@ -19,8 +19,6 @@ inputs:
     type: string
   - id: parentid
     type: string
-  - id: status
-    type: string
   - id: synapse_config
     type: File
   - id: input_dir
@@ -29,10 +27,12 @@ inputs:
     type: string
   - id: model
     type: File
-  - id: scratch
-    type: File
+  # - id: scratch
+  #   type: File
   - id: docker_script
     type: File
+  - id: quota
+    type: int
 
 arguments: 
   - valueFrom: $(inputs.docker_script.path)
@@ -42,8 +42,6 @@ arguments:
     prefix: -p
   - valueFrom: $(inputs.docker_digest)
     prefix: -d
-  - valueFrom: $(inputs.status)
-    prefix: --status
   - valueFrom: $(inputs.parentid)
     prefix: --parentid
   - valueFrom: $(inputs.synapse_config.path)
@@ -54,8 +52,10 @@ arguments:
     prefix: --stage
   - valueFrom: $(inputs.model.path)
     prefix: -m
-  - valueFrom: $(inputs.scratch.path)
-    prefix: -f
+  # - valueFrom: $(inputs.scratch.path)
+  #   prefix: -f
+  - valueFrom: $(inputs.quota)
+    prefix: -q
 
 requirements:
   - class: InitialWorkDirRequirement
@@ -65,16 +65,11 @@ requirements:
         entry: |
           {"auths": {"$(inputs.docker_registry)": {"auth": "$(inputs.docker_authentication)"}}}
   - class: InlineJavascriptRequirement
-  - class: ToolTimeLimit
-    timelimit: 1200
+  # - class: ToolTimeLimit
+  #   timelimit: 1200
 
 outputs:
   predictions:
     type: File
     outputBinding:
       glob: output/predictions.csv
-  
-  status:
-    type: string
-    outputBinding:
-      outputEval: $("INFERRED")
