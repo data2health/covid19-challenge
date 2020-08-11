@@ -8,7 +8,7 @@ baseCommand: python3
 
 hints:
   DockerRequirement:
-    dockerPull: sagebionetworks/synapsepythonclient:v2.0.0
+    dockerPull: sagebionetworks/synapsepythonclient:v2.1.0
 
 inputs:
   - id: docker_repository
@@ -96,7 +96,6 @@ requirements:
             docker_size = sum([layer['size'] for layer in resp.json()['layers']])
             if docker_size/1000000000.0 >= 1000:
               invalid_reasons.append("Docker container must be less than a teribyte")
-            
 
             blob_request_url = '{0}/v2/{1}/blobs/{2}'.format(index_endpoint, docker_repo, resp.json()['config']['digest'])
             blob_resp = requests.get(blob_request_url, headers={'Authorization': 'Bearer %s' % token})
@@ -111,13 +110,33 @@ requirements:
                 invalid_reasons.append("description LABEL can't be empty string")
               if labels['ranked_features'].split(",")[0] == '':
                 invalid_reasons.append("ranked_features LABEL can't be empty string")
+              for label in required_labels:
+                if len(labels[label]) > 500:
+                  invalid_reasons.append(f"{label} LABEL must be smaller than 500 characters")
             else:
               labels = {}
               invalid_reasons.append("Dockerfile must contain these Dockerfile LABELs: {}".format(",".join(required_labels)))
           else:
             invalid_reasons.append("Submission must be a Docker image, not Project/Folder/File. Please visit 'Docker Submission' for more information.")
         
-          status = "INVALID" if invalid_reasons else "EVALUATION_IN_PRORGRESS"
+          # Don't store labels if invalid
+          if invalid_reasons:
+            status = "INVALID"
+            labels = {}
+          else:
+            status = "EVALUATION_IN_PRORGRESS"
+
+          training = labels.get("enable_training")
+          if training is not None:
+            if training.upper() not in ["TRUE", "FALSE"]:
+              invalid_reasons.append("If you specify enable_training, it must be 'true' or 'false'.")
+            else:
+              labels['enable_training'] = training.upper() == "TRUE"
+          else:
+            labels['enable_training'] = False
+          keep_labels = ['enable_training', 'ranked_features', 'references', 'description',
+                         'challenge']
+          labels = {key: value for key, value in labels.items() if key in keep_labels}
           result = {'submission_errors':"\n".join(invalid_reasons),
                     'submission_status':status}
           result.update(labels)
@@ -127,12 +146,12 @@ requirements:
             result['detailed_information'] = (
               "<details>\n\n"
               "<summary>Expand for details</summary>\n\n"
-              f"**Description:** {labels['description']}\n"
-              f"**Ranked features:** {features}\n"
-              f"**References:** {references}\n\n"
+              f"**Description:** {labels['description'][:100]}\n"
+              f"**Ranked features:** {features[:100]}\n"
+              f"**References:** {references[:100]}\n\n"
               "</details>")
           else:
-            result['detailed_information'] = ''
+            result['detailed_information'] = 'No Details'
           with open(args.results, 'w') as o:
             o.write(json.dumps(result))
 
@@ -156,3 +175,10 @@ outputs:
       glob: results.json
       loadContents: true
       outputEval: $(JSON.parse(self[0].contents)['submission_errors'])
+
+  - id: enable_training
+    type: boolean
+    outputBinding:
+      glob: results.json
+      loadContents: true
+      outputEval: $(JSON.parse(self[0].contents)['enable_training'])
