@@ -159,8 +159,8 @@ def main(syn, args):
         subprocess.check_call(["docker", "cp", os.path.abspath(log_filename),
                                 "logging:/logs/" + str(args.submissionid) + "/"])
 
-        # subprocess.check_call(["docker", "cp", os.path.abspath(stats_log),
-        #                        "logging:/logs/" + str(args.submissionid) + "/"])
+        subprocess.check_call(["docker", "cp", os.path.abspath(stats_log),
+                                "logging:/logs/" + str(args.submissionid) + "/"])
 
         store_log_file(syn, log_filename, args.parentid, test=True)
         inspection = api_client.inspect_container(container.id)
