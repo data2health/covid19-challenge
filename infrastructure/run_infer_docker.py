@@ -149,9 +149,8 @@ def main(args):
     log_filename = args.submissionid + "_" + str(stage) + "_log.txt"
     open(log_filename, 'w').close()
 
-    #Creating Logging directory
-    #subprocess.check_call(["docker", "exec", "logging mkdir /logs/" + str(args.submissionid) + "/"])
-    subprocess.check_call(['docker', 'exec', 'logging', 'mkdir', '/logs/' + str(args.submissionid) + '/'])
+    # Log directory is already created in training step
+    # subprocess.check_call(['docker', 'exec', 'logging', 'mkdir', '/logs/' + str(args.submissionid) + '/'])
 
     start = time.time()
     # If the container doesn't exist, there are no logs to write out and no
