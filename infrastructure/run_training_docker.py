@@ -166,9 +166,6 @@ def main(syn, args):
         # If the container doesn't exist, there are no logs to write out and
         # no container to remove
         if container is not None:
-            ## Create the logging directory on the UW server
-            subprocess.check_call(["docker", "exec", "logging", "mkdir",
-                                    "logs/" + str(args.submissionid)])
 
             logging_stats = "Time,Mem Usage,Perc Usage,Mem Limit\n"
             stats_start = time.time()
