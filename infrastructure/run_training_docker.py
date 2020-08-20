@@ -26,6 +26,10 @@ def store_log_file(syn, log_filename, parentid, test=False):
     """Store log file"""
     statinfo = os.stat(log_filename)
     if statinfo.st_size > 0:
+        
+        subprocess.check_call(["docker", "cp", os.path.abspath(log_filename),
+                        "logging:/logs/" + str(args.submissionid) + "/"])
+
         ent = synapseclient.File(log_filename, parent=parentid)
         # Don't store if test
         if not test:
@@ -162,6 +166,7 @@ def main(syn, args):
         # If the container doesn't exist, there are no logs to write out and
         # no container to remove
         if container is not None:
+
             logging_stats = "Time,Mem Usage,Perc Usage,Mem Limit\n"
             stats_start = time.time()
             # Check if container is still running
@@ -176,8 +181,7 @@ def main(syn, args):
             create_log_file(log_filename, log_text=log_text)
 
             subprocess.check_call(["docker", "cp", os.path.abspath(log_filename),
-                                    "logging:/logs/" + str(args.submissionid) + "/"])
-
+                        "logging:/logs/" + str(args.submissionid) + "/"])
             subprocess.check_call(["docker", "cp", os.path.abspath(stats_log),
                                     "logging:/logs/" + str(args.submissionid) + "/"])
             
