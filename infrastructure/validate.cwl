@@ -8,7 +8,7 @@ baseCommand: validate.py
 
 hints:
   DockerRequirement:
-    dockerPull: docker.synapse.org/syn21849256/covid-validate:v1
+    dockerPull: docker.synapse.org/syn21849256/covid-validate:v2
 
 inputs:
 
