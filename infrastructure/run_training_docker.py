@@ -108,6 +108,10 @@ def main(syn, args):
 
     input_dir = args.input_dir
     data_version = input_dir.split("_train_")
+    # create folder here so that the folder is created for both inference
+    # and training
+    subprocess.check_call(["docker", "exec", "logging", "mkdir",
+                           "logs/" + str(args.submissionid)])
     if data_version[1] != '' and args.training:
 
         print("training")
