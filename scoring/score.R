@@ -31,7 +31,8 @@ compute_scores <- function(submission_path, goldstandard_path) {
     'PRAUC' = round(pr$auc.integral, 6))
 }
 # Mapping of scores
-score_map = list("1" = compute_scores)
+score_map = list("1" = compute_scores,
+                 "2" = compute_scores)
 
 scores = score_map[[args$question]](args$submission_file, args$goldstandard)
 scores[['submission_status']] = "SCORED"

@@ -73,7 +73,8 @@ def q1_validation(submission_file, goldstandard_file):
 
 def main():
     args = cli()
-    func_map = {1: q1_validation}
+    func_map = {1: q1_validation,
+                2: q1_validation}
     validation_func = func_map[args.question]
     submission_status, invalid_reasons = validation_func(
         args.submission_file, args.goldstandard

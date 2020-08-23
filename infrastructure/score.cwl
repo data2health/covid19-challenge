@@ -8,7 +8,7 @@ baseCommand: score.R
 
 hints:
   DockerRequirement:
-    dockerPull: docker.synapse.org/syn21849256/covid-scoring:v2
+    dockerPull: docker.synapse.org/syn21849256/covid-scoring:v3
 
 inputs:
   - id: inputfile
