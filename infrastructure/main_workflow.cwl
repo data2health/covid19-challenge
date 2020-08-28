@@ -56,6 +56,19 @@ steps:
     run:  https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/set_permissions.cwl
     in:
       - id: entityid
+        source: "#adminUploadSynId"
+      - id: principalid
+        valueFrom: "3407544"
+      - id: permissions
+        valueFrom: "download"
+      - id: synapse_config
+        source: "#synapseConfig"
+    out: []
+
+  set_permissions:
+    run:  https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/set_permissions.cwl
+    in:
+      - id: entityid
         source: "#submitterUploadSynId"
       - id: principalid
         valueFrom: "3407544"
