@@ -10,9 +10,7 @@ import synapseclient
 
 def cli():
     """Command line interface"""
-    parser = argparse.ArgumentParser(description='Process some integers.')
-    parser.add_argument('evaluationid', type=int,
-                        help='A question number to add')
+    parser = argparse.ArgumentParser(description='Rank COVID-19 submissions.')
     parser.add_argument('--username', type=str,
                         help='Synapse Username')
     parser.add_argument('--password', type=str,
@@ -32,7 +30,7 @@ def get_score_results(syn, main_queue, internal_queue, site=None):
         raise ValueError("No queue id")
     dataset_mappingdf = dataset_mappingdf.fillna("")
     # Get dataset info
-    dataset_info = dataset_mappingdf.to_dict("record")[0]
+    dataset_info = dataset_mappingdf.to_dict("records")[0]
     train = dataset_info['train_dataset_version']
     infer = dataset_info['infer_dataset_version']
     query = (
@@ -76,11 +74,8 @@ def main():
     args = cli()
     syn = synapseclient.Synapse()
     syn.login(email=args.username, password=args.password)
-    queue_id = args.evaluationid
-    # TODO: Can loop through main queues instead of specifying
-    # a queue
     queue_mapping = syn.tableQuery(
-        f"SELECT * FROM syn22077175 where main = '{queue_id}'"
+        f"SELECT * FROM syn22077175 where to_rank is true"
     )
     queue_mappingdf = queue_mapping.asDataFrame()
     if queue_mappingdf.empty:

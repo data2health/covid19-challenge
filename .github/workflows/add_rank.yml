@@ -26,4 +26,4 @@ jobs:
 
     - name: Reject Submissions
       run: |
-        python scripts/add_rank.py 9614453 --username ${{ secrets.SYN_USERNAME }} --password ${{ secrets.SYN_PASSWORD }}
+        python scripts/add_rank.py --username ${{ secrets.SYN_USERNAME }} --password ${{ secrets.SYN_PASSWORD }}
