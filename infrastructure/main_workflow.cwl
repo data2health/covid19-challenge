@@ -65,7 +65,7 @@ steps:
         source: "#synapseConfig"
     out: []
 
-  set_permissions:
+  set_permissions_admin:
     run:  https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/set_permissions.cwl
     in:
       - id: entityid
