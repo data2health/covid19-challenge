@@ -140,7 +140,7 @@ requirements:
           result = {'submission_errors':"\n".join(invalid_reasons),
                     'submission_status':status}
           result.update(labels)
-          if labels:
+          if labels and status != "INVALID":
             features = ", ".join(labels['ranked_features'].split(","))
             references = ", ".join(labels['references'].split(","))
             result['detailed_information'] = (
