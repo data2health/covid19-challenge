@@ -82,6 +82,7 @@ def main():
         raise ValueError("No queue id")
     queue_mapping_dict = queue_mappingdf.to_dict('records')
     for queue_map in queue_mapping_dict:
+        queue_id = queue_map['main']
         internal_queue = queue_map['internal']
         site = queue_map['site']
         resultsdf = get_score_results(syn, queue_id, internal_queue, site)
