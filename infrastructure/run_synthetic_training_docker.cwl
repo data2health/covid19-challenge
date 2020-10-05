@@ -57,7 +57,8 @@ requirements:
       - $(inputs.docker_script)
       - entryname: .docker/config.json
         entry: |
-          {"auths": {"$(inputs.docker_registry)": {"auth": "$(inputs.docker_authentication)"}}}
+          {"auths": {"$(inputs.docker_registry)": {"auth": "$(inputs.docker_authentication)"}},
+           "HttpHeaders": {"User-Agent": "Docker-Client/19.03.6-ce (linux)"}}
   - class: InlineJavascriptRequirement
   # - class: ToolTimeLimit
   #   timelimit: 1200
