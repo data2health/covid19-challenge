@@ -213,7 +213,8 @@ steps:
       - id: submissionid
         source: "#submissionId"
       - id: docker_registry
-        source: "#get_docker_config/docker_registry"
+        # source: "#get_docker_config/docker_registry"
+        valueFrom: "docker.synapse.org"
       - id: docker_authentication
         source: "#get_docker_config/docker_authentication"
       - id: previous
