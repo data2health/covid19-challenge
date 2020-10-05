@@ -98,8 +98,6 @@ def main(syn, args):
     # directory = "/data/common/DREAM Challenge/data/submissions"
     scratch_dir = os.path.join(os.getcwd(), "scratch")
     model_dir = os.path.join(os.getcwd(), "model")
-    os.mkdir(model_dir)
-    os.mkdir(scratch_dir)
     input_dir = args.input_dir
 
     data_version = input_dir.split("_train_")
@@ -181,8 +179,8 @@ def main(syn, args):
         remove_docker_image(docker_image)
     else:
         print("No training")
-        # os.mkdir(model_dir)
-        # os.mkdir(scratch_dir)
+        os.mkdir(model_dir)
+        os.mkdir(scratch_dir)
         model_fill = os.path.join(model_dir, "model_fill.txt")
         open(model_fill, 'w').close()
 
