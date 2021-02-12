@@ -89,3 +89,13 @@ sagebionetworks/synapseworkfloworchestrator:1.1
 ### Can't use Docker?
 
 Use the `WES` implementation + singularity.
+
+
+### Using logging container
+```
+docker volume create --driver local --opt type=none --opt device=~/logs --opt o=bind  logging
+# Must start logging container
+docker run --name logging -v logging:/logging centos
+# View logs in ~/logs
+ls ~/logs
+```
