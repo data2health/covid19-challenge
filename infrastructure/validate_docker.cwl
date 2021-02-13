@@ -99,7 +99,7 @@ requirements:
 
             blob_request_url = '{0}/v2/{1}/blobs/{2}'.format(index_endpoint, docker_repo, resp.json()['config']['digest'])
             blob_resp = requests.get(blob_request_url, headers={'Authorization': 'Bearer %s' % token})
-            labels = blob_resp.json()['container_config']['Labels']
+            labels = blob_resp.json()['config']['Labels']
             required_labels = {'challenge', 'description', 'ranked_features', 'references'}
             # features = ['age', 'gender', 'cough', 'fever', 'fatigue']
 
