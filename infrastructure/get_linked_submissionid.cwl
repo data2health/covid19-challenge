@@ -8,7 +8,7 @@ baseCommand: python3
 
 hints:
   DockerRequirement:
-    dockerPull: sagebionetworks/synapsepythonclient:v2.1.0
+    dockerPull: sagebionetworks/synapsepythonclient:v2.2.2
 
 inputs:
   - id: submissionid

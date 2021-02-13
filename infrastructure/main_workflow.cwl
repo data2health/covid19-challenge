@@ -194,7 +194,7 @@ steps:
     out: [finished]
 
   get_docker_config:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v2.7/get_docker_config.cwl
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/ChallengeWorkflowTemplates/v3.0/cwl/get_docker_config.cwl
     in:
       - id: synapse_config
         source: "#synapseConfig"
@@ -214,6 +214,7 @@ steps:
         source: "#submissionId"
       - id: docker_registry
         source: "#get_docker_config/docker_registry"
+        # valueFrom: "docker.synapse.org"
       - id: docker_authentication
         source: "#get_docker_config/docker_authentication"
       - id: previous
